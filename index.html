@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ Global – SOP Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#0F1D33;
+  --navy-800:#12233F;
+  --navy-700:#1B3358;
+  --navy-600:#28466F;
+  --steel-50:#F3F5F8;
+  --steel-100:#EEF1F5;
+  --steel-200:#E3E8EE;
+  --line:#DCE1E8;
+  --white:#FFFFFF;
+  --ink:#16202C;
+  --muted:#5B6675;
+  --muted-2:#8590A0;
+  --amber:#DD8A1E;
+  --amber-dark:#B96A12;
+  --amber-soft:#FBEBD3;
+  --green:#1E8A5F;
+  --green-soft:#E0F2E9;
+  --gold:#B8860B;
+  --gold-soft:#FBF0DA;
+  --grey-status:#6B7280;
+  --grey-soft:#EAECEF;
+  --danger:#C0392B;
+  --radius-s:4px;
+  --radius-m:6px;
+  --radius-l:10px;
+  --sidebar-w:248px;
+  --font-ui:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-mono:'IBM Plex Mono',Consolas,Monaco,monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-ui);
+  background:var(--steel-100);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  font-size:14.5px;
+  line-height:1.55;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+::selection{background:var(--amber-soft);}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+
+/* ---------- App Shell ---------- */
+#app-shell{display:flex;min-height:100vh;}
+
+/* Sidebar */
+#sidebar{
+  width:var(--sidebar-w);
+  background:var(--navy-800);
+  color:#CBD5E3;
+  position:fixed;top:0;left:0;bottom:0;
+  display:flex;flex-direction:column;
+  z-index:40;
+  transition:transform .2s ease;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  padding:20px 18px 16px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.brand-mark{
+  width:36px;height:36px;border-radius:var(--radius-s);
+  background:linear-gradient(155deg,var(--amber),var(--amber-dark));
+  color:var(--navy-900);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;letter-spacing:0.02em;
+  flex-shrink:0;
+  font-family:var(--font-mono);
+}
+.brand-text{line-height:1.25;}
+.brand-text .b1{color:#fff;font-weight:600;font-size:14.5px;letter-spacing:0.01em;}
+.brand-text .b2{color:#93A2B8;font-size:11.5px;margin-top:1px;}
+
+.side-nav{padding:14px 10px;flex:1;overflow-y:auto;}
+.side-section-label{
+  padding:14px 10px 6px 10px;
+  font-size:11px;color:#6E80A0;
+  letter-spacing:0.04em;
+}
+.side-link{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:var(--radius-s);
+  color:#B9C6D9;font-size:13.6px;font-weight:500;
+  margin-bottom:2px;
+}
+.side-link:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.side-link.active{background:var(--navy-700);color:#fff;box-shadow:inset 2px 0 0 var(--amber);}
+.side-link .ic{width:17px;height:17px;flex-shrink:0;opacity:.9;}
+.side-link .count{margin-left:auto;font-family:var(--font-mono);font-size:11px;color:#7C8CA5;}
+
+.dept-mini-list{padding:2px 10px 10px 10px;}
+.dept-mini-link{
+  display:flex;align-items:center;gap:9px;
+  padding:6.5px 12px;border-radius:var(--radius-s);
+  color:#A7B4C7;font-size:13px;
+}
+.dept-mini-link:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.dept-mini-link.active{background:var(--navy-700);color:#fff;}
+.dept-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+
+.sidebar-foot{
+  padding:14px 18px;border-top:1px solid rgba(255,255,255,0.08);
+  font-size:11.5px;color:#66759090;
+}
+
+/* Main column */
+#main-col{margin-left:var(--sidebar-w);flex:1;min-width:0;display:flex;flex-direction:column;}
+
+/* Topbar */
+#topbar{
+  position:sticky;top:0;z-index:30;
+  background:var(--white);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;
+  padding:12px 24px;
+}
+#hamburger{display:none;background:none;border:none;padding:6px;color:var(--ink);}
+.search-wrap{flex:1;max-width:520px;position:relative;}
+.search-wrap input{
+  width:100%;padding:9px 14px 9px 36px;
+  border:1px solid var(--line);border-radius:var(--radius-m);
+  background:var(--steel-50);font-size:13.6px;color:var(--ink);
+}
+.search-wrap input:focus{background:#fff;border-color:var(--navy-600);}
+.search-wrap .sic{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted-2);width:15px;height:15px;}
+.topbar-spacer{flex:1;}
+.role-switch{
+  display:flex;align-items:center;gap:6px;
+  border:1px solid var(--line);border-radius:var(--radius-m);
+  padding:6px 10px;font-size:12.8px;color:var(--muted);background:var(--steel-50);
+}
+.role-switch select{border:none;background:transparent;font-size:12.8px;color:var(--ink);font-weight:600;}
+.icon-btn{
+  position:relative;width:34px;height:34px;border-radius:var(--radius-m);
+  border:1px solid var(--line);background:var(--white);
+  display:flex;align-items:center;justify-content:center;color:var(--muted);
+}
+.icon-btn:hover{background:var(--steel-50);}
+.icon-btn .dot{
+  position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
+  background:var(--amber);border:2px solid #fff;
+}
+.notif-panel{
+  position:absolute;right:24px;top:58px;width:340px;
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);
+  box-shadow:0 10px 30px rgba(15,29,51,0.14);
+  z-index:50;overflow:hidden;
+}
+.notif-panel h4{margin:0;padding:13px 16px;font-size:13px;border-bottom:1px solid var(--line);color:var(--ink);}
+.notif-item{padding:11px 16px;border-bottom:1px solid var(--steel-100);font-size:12.8px;}
+.notif-item:last-child{border-bottom:none;}
+.notif-item .t{font-weight:600;color:var(--ink);}
+.notif-item .d{color:var(--muted);margin-top:2px;font-size:12px;}
+
+/* Content area */
+#view{padding:22px 26px 60px 26px;max-width:1280px;width:100%;margin:0 auto;}
+
+.breadcrumb{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:12.6px;color:var(--muted);margin-bottom:14px;}
+.breadcrumb a:hover{color:var(--navy-700);text-decoration:underline;}
+.breadcrumb .sep{color:var(--muted-2);}
+.breadcrumb .cur{color:var(--ink);font-weight:600;}
+
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
+.page-title{font-size:22px;font-weight:600;color:var(--navy-900);letter-spacing:-0.01em;}
+.page-sub{color:var(--muted);font-size:13.4px;margin-top:3px;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  border-radius:var(--radius-m);padding:8px 14px;font-size:13.2px;font-weight:600;
+  border:1px solid transparent;white-space:nowrap;
+}
+.btn-primary{background:var(--navy-800);color:#fff;}
+.btn-primary:hover{background:var(--navy-700);}
+.btn-amber{background:var(--amber);color:#3A2200;}
+.btn-amber:hover{background:var(--amber-dark);color:#fff;}
+.btn-ghost{background:#fff;border-color:var(--line);color:var(--ink);}
+.btn-ghost:hover{background:var(--steel-50);}
+.btn-danger-ghost{background:#fff;border-color:#EBCFC9;color:var(--danger);}
+.btn-danger-ghost:hover{background:#FBEEEC;}
+.btn-sm{padding:5px 10px;font-size:12px;}
+.btn[disabled]{opacity:.45;cursor:not-allowed;}
+
+/* Stats strip */
+.stats-strip{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  border:1px solid var(--line);border-radius:var(--radius-l);
+  background:#fff;overflow:hidden;margin-bottom:22px;
+}
+.stat-cell{padding:14px 18px;border-right:1px solid var(--line);}
+.stat-cell:last-child{border-right:none;}
+.stat-num{font-family:var(--font-mono);font-size:21px;font-weight:600;color:var(--navy-900);}
+.stat-lbl{font-size:11.6px;color:var(--muted);margin-top:2px;}
+
+/* Cards */
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:30px 0 12px 0;}
+.section-head h3{font-size:15.5px;font-weight:600;color:var(--navy-900);margin:0;}
+.section-head a.view-all{font-size:12.6px;color:var(--navy-700);font-weight:600;}
+
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px;}
+.dept-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);
+  padding:16px;position:relative;overflow:hidden;
+}
+.dept-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--dcolor,var(--navy-600));}
+.dept-card-top{display:flex;gap:11px;align-items:flex-start;}
+.mono-badge{
+  width:38px;height:38px;border-radius:var(--radius-s);flex-shrink:0;
+  background:var(--dcolor,var(--navy-700));color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-weight:600;font-size:13px;
+}
+.dept-card h4{margin:0;font-size:14.5px;font-weight:600;color:var(--ink);}
+.dept-card .desc{color:var(--muted);font-size:12.6px;margin-top:5px;line-height:1.5;min-height:32px;}
+.dept-card .meta-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--steel-100);}
+.dept-card .count-badge{font-family:var(--font-mono);font-size:11.5px;color:var(--muted);background:var(--steel-100);padding:3px 8px;border-radius:20px;}
+
+/* Lists (recent/most-used) */
+.mini-list{display:flex;flex-direction:column;gap:8px;}
+.mini-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border:1px solid var(--line);border-radius:var(--radius-m);background:#fff;
+}
+.mini-row .mchip{width:6px;height:30px;border-radius:3px;background:var(--dcolor,var(--navy-600));flex-shrink:0;}
+.mini-row .mbody{flex:1;min-width:0;}
+.mini-row .mtitle{font-size:13.4px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mini-row .mmeta{font-size:11.6px;color:var(--muted);margin-top:2px;font-family:var(--font-mono);}
+.mini-row .mright{font-size:11.6px;color:var(--muted-2);text-align:right;flex-shrink:0;}
+.fav-star{background:none;border:none;color:var(--muted-2);padding:4px;flex-shrink:0;}
+.fav-star.active{color:var(--amber);}
+
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.quick-tile{
+  border:1px solid var(--line);border-radius:var(--radius-m);background:#fff;
+  padding:13px 14px;display:flex;flex-direction:column;gap:8px;
+}
+.quick-tile .qlabel{font-size:12.8px;font-weight:600;color:var(--ink);}
+.quick-tile .qsub{font-size:11.4px;color:var(--muted);}
+
+/* Status pills */
+.status-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 9px;border-radius:20px;font-size:11.3px;font-weight:600;
+  font-family:var(--font-mono);
+}
+.status-active{background:var(--green-soft);color:var(--green);}
+.status-draft{background:var(--gold-soft);color:var(--gold);}
+.status-archived{background:var(--grey-soft);color:var(--grey-status);}
+.dotpip{width:7px;height:7px;border-radius:50%;background:currentColor;}
+
+/* Category tabs */
+.cat-tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;}
+.cat-tab{
+  padding:6.5px 13px;border-radius:20px;border:1px solid var(--line);background:#fff;
+  font-size:12.6px;font-weight:600;color:var(--muted);
+}
+.cat-tab.active{background:var(--navy-800);border-color:var(--navy-800);color:#fff;}
+
+/* SOP document cards (department page list) */
+.sop-doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;}
+.sop-doc-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);
+  padding:16px;display:flex;flex-direction:column;gap:10px;
+}
+.sop-doc-card .sdc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.sop-doc-card .sdc-code{font-family:var(--font-mono);font-size:11.3px;color:var(--muted-2);}
+.sop-doc-card h4{margin:0;font-size:14.3px;font-weight:600;color:var(--ink);line-height:1.35;}
+.sdc-facts{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:11.8px;color:var(--muted);padding-top:8px;border-top:1px solid var(--steel-100);}
+.sdc-facts b{color:var(--ink);font-weight:600;}
+.sdc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+
+/* SOP detail page */
+.sop-header{
+  background:linear-gradient(180deg,var(--navy-800),var(--navy-900));
+  color:#fff;border-radius:var(--radius-l);padding:22px 26px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.sop-header::after{
+  content:"";position:absolute;inset:0;opacity:.10;
+  background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);
+  background-size:26px 26px;pointer-events:none;
+}
+.sop-header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;position:relative;}
+.sop-header .code-line{font-family:var(--font-mono);font-size:12px;color:#9FB2CC;letter-spacing:0.02em;}
+.sop-header h1{font-size:22px;font-weight:600;margin:6px 0 0 0;letter-spacing:-0.01em;max-width:640px;}
+.sop-header-actions{display:flex;gap:8px;flex-shrink:0;}
+.sop-meta-grid{
+  position:relative;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px;
+  padding-top:16px;border-top:1px solid rgba(255,255,255,0.14);
+}
+.sop-meta-grid .mk{font-size:10.8px;color:#8FA2BE;margin-bottom:3px;}
+.sop-meta-grid .mv{font-size:13px;font-weight:600;color:#fff;font-family:var(--font-mono);}
+
+.doc-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;}
+.doc-main{display:flex;flex-direction:column;gap:18px;}
+.doc-section{background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);padding:20px 22px;}
+.doc-section h3{font-size:13.5px;text-transform:none;font-weight:700;color:var(--navy-900);margin:0 0 12px 0;display:flex;align-items:center;gap:8px;}
+.doc-section h3 .num{font-family:var(--font-mono);font-size:11px;color:var(--muted-2);}
+.doc-section p{margin:0;color:var(--ink);font-size:13.6px;line-height:1.65;}
+.step-list{list-style:none;margin:0;padding:0;counter-reset:step;display:flex;flex-direction:column;gap:0;}
+.step-list li{
+  counter-increment:step;position:relative;padding:11px 0 11px 40px;
+  border-bottom:1px solid var(--steel-100);font-size:13.4px;
+}
+.step-list li:last-child{border-bottom:none;}
+.step-list li::before{
+  content:counter(step);position:absolute;left:0;top:9px;
+  width:26px;height:26px;border-radius:50%;background:var(--navy-800);color:#fff;
+  font-family:var(--font-mono);font-weight:600;font-size:12px;
+  display:flex;align-items:center;justify-content:center;
+}
+.resp-table{width:100%;border-collapse:collapse;font-size:13.2px;}
+.resp-table td{padding:8px 4px;border-bottom:1px solid var(--steel-100);vertical-align:top;}
+.resp-table td:first-child{color:var(--navy-700);font-weight:600;width:170px;white-space:nowrap;}
+.resp-table tr:last-child td{border-bottom:none;}
+.doc-chip-list{display:flex;flex-direction:column;gap:8px;}
+.doc-chip{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  border:1px solid var(--line);border-radius:var(--radius-m);font-size:13px;
+}
+.doc-chip .ic{width:16px;height:16px;color:var(--muted);flex-shrink:0;}
+.flow-track{display:flex;align-items:center;flex-wrap:wrap;gap:0;}
+.flow-node{
+  border:1px solid var(--line);border-radius:var(--radius-m);padding:10px 14px;background:var(--steel-50);
+  font-size:12.6px;min-width:150px;
+}
+.flow-node .fs{font-weight:700;color:var(--navy-900);font-size:12.8px;}
+.flow-node .fa{color:var(--muted);margin-top:2px;}
+.flow-arrow{padding:0 10px;color:var(--muted-2);font-size:16px;}
+.related-list{display:flex;flex-direction:column;gap:8px;}
+.related-item{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:9px 12px;border:1px solid var(--line);border-radius:var(--radius-m);font-size:12.8px;
+}
+.related-item .rt{font-weight:600;color:var(--ink);}
+.related-item .rc{font-family:var(--font-mono);font-size:11px;color:var(--muted-2);}
+.vh-table{width:100%;border-collapse:collapse;font-size:12.8px;}
+.vh-table th{text-align:left;color:var(--muted);font-weight:600;font-size:11.3px;padding:6px 8px;border-bottom:2px solid var(--steel-200);}
+.vh-table td{padding:9px 8px;border-bottom:1px solid var(--steel-100);}
+.vh-table td.vnum{font-family:var(--font-mono);font-weight:600;color:var(--navy-800);}
+
+.doc-side{display:flex;flex-direction:column;gap:16px;position:sticky;top:76px;}
+.side-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);padding:16px;}
+.side-card h4{font-size:12px;font-weight:700;color:var(--muted);margin:0 0 10px 0;}
+
+/* Forms (admin) */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-field{display:flex;flex-direction:column;gap:5px;}
+.form-field.full{grid-column:1/-1;}
+.form-field label{font-size:12.4px;font-weight:600;color:var(--ink);}
+.form-field .hint{font-size:11px;color:var(--muted-2);}
+.form-field input,.form-field select,.form-field textarea{
+  padding:9px 11px;border:1px solid var(--line);border-radius:var(--radius-m);font-size:13.2px;background:#fff;color:var(--ink);
+}
+.form-field textarea{resize:vertical;min-height:70px;}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--navy-600);}
+.list-editor{display:flex;flex-direction:column;gap:8px;}
+.list-editor-row{display:flex;gap:8px;align-items:center;}
+.list-editor-row input{flex:1;}
+.remove-row-btn{background:#fff;border:1px solid var(--line);border-radius:var(--radius-s);color:var(--danger);width:30px;height:32px;flex-shrink:0;}
+.add-row-btn{align-self:flex-start;font-size:12.2px;font-weight:600;color:var(--navy-700);background:none;border:none;padding:4px 0;}
+
+.admin-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px;}
+.admin-tab{padding:10px 16px;font-size:13.2px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;}
+.admin-tab.active{color:var(--navy-900);border-bottom-color:var(--amber);}
+
+.admin-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);overflow:hidden;font-size:13px;}
+.admin-table th{text-align:left;background:var(--steel-50);color:var(--muted);font-weight:600;font-size:11.4px;padding:10px 14px;border-bottom:1px solid var(--line);}
+.admin-table td{padding:10px 14px;border-bottom:1px solid var(--steel-100);vertical-align:middle;}
+.admin-table tr:last-child td{border-bottom:none;}
+.row-actions{display:flex;gap:6px;justify-content:flex-end;}
+.icon-mini-btn{border:1px solid var(--line);background:#fff;border-radius:var(--radius-s);width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);}
+.icon-mini-btn:hover{background:var(--steel-50);}
+.icon-mini-btn.danger{color:var(--danger);}
+.icon-mini-btn.danger:hover{background:#FBEEEC;}
+
+.empty-state{
+  text-align:center;padding:60px 20px;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius-l);background:#fff;
+}
+.empty-state .es-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:5px;}
+
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(15,29,51,0.45);z-index:100;
+  display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;
+}
+.modal-box{background:#fff;border-radius:var(--radius-l);max-width:760px;width:100%;padding:24px;}
+.modal-box h3{margin:0 0 18px 0;font-size:16.5px;}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line);}
+
+.filters-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;align-items:center;}
+.filters-bar select{padding:8px 10px;border:1px solid var(--line);border-radius:var(--radius-m);font-size:12.6px;background:#fff;color:var(--ink);}
+.result-count{font-size:12.6px;color:var(--muted);margin-left:auto;}
+
+.toast{
+  position:fixed;bottom:22px;right:22px;background:var(--navy-900);color:#fff;
+  padding:11px 18px;border-radius:var(--radius-m);font-size:13px;z-index:200;
+  box-shadow:0 8px 22px rgba(0,0,0,0.25);
+  display:flex;align-items:center;gap:8px;
+}
+
+@media (max-width: 980px){
+  .doc-layout{grid-template-columns:1fr;}
+  .doc-side{position:static;}
+  .sop-meta-grid{grid-template-columns:repeat(2,1fr);}
+  .stats-strip{grid-template-columns:repeat(2,1fr);}
+  .stat-cell:nth-child(2n){border-right:none;}
+  .form-grid{grid-template-columns:1fr;}
+}
+@media (max-width: 780px){
+  #sidebar{transform:translateX(-100%);}
+  #sidebar.open{transform:translateX(0);box-shadow:8px 0 30px rgba(0,0,0,0.25);}
+  #main-col{margin-left:0;}
+  #hamburger{display:flex;align-items:center;justify-content:center;}
+  .role-switch span{display:none;}
+}
+
+/* ---------- RTL / Arabic language mode ---------- */
+html[dir="rtl"] body{font-family:'IBM Plex Sans Arabic',var(--font-ui);}
+html[dir="rtl"] .side-link.active{box-shadow:inset -2px 0 0 var(--amber);}
+html[dir="rtl"] #sidebar{left:auto;right:0;}
+html[dir="rtl"] #main-col{margin-left:0;margin-right:var(--sidebar-w);}
+html[dir="rtl"] .search-wrap .sic{left:auto;right:11px;}
+html[dir="rtl"] .search-wrap input{padding:9px 36px 9px 14px;}
+html[dir="rtl"] .icon-btn .dot{right:auto;left:-3px;}
+html[dir="rtl"] .notif-panel{right:auto;left:24px;}
+html[dir="rtl"] .dept-card::before{left:auto;right:0;}
+html[dir="rtl"] .mini-row .mright{text-align:left;}
+html[dir="rtl"] .step-list li{padding:11px 40px 11px 0;}
+html[dir="rtl"] .step-list li::before{left:auto;right:0;}
+html[dir="rtl"] .resp-table td:first-child{white-space:normal;}
+html[dir="rtl"] .flow-arrow{transform:scaleX(-1);}
+html[dir="rtl"] .breadcrumb .chev{display:inline-block;transform:scaleX(-1);}
+html[dir="rtl"] .stat-cell{border-right:none;border-left:1px solid var(--line);}
+html[dir="rtl"] .stat-cell:last-child{border-left:none;}
+html[dir="rtl"] .sop-header,html[dir="rtl"] .sop-meta-grid{text-align:right;}
+html[dir="rtl"] .row-actions{justify-content:flex-start;}
+html[dir="rtl"] .vh-table th,html[dir="rtl"] .vh-table td{text-align:right;}
+html[dir="rtl"] .lang-switch{font-family:var(--font-ui);}
+@media (max-width:780px){
+  html[dir="rtl"] #sidebar{transform:translateX(100%);}
+  html[dir="rtl"] #sidebar.open{transform:translateX(0);}
+  html[dir="rtl"] #main-col{margin-right:0;}
+}
+.lang-switch{
+  display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--radius-m);overflow:hidden;flex-shrink:0;
+}
+.lang-switch button{
+  border:none;background:#fff;color:var(--muted);font-size:12px;font-weight:700;padding:7px 11px;
+}
+.lang-switch button.active{background:var(--navy-800);color:#fff;}
+</style>
+</head>
+<body>
+
+<div id="app-shell">
+  <aside id="sidebar"></aside>
+  <div id="main-col">
+    <header id="topbar"></header>
+    <main id="view"></main>
+  </div>
+</div>
+<div id="overlay-root"></div>
+<div id="toast-root"></div>
+
+<script>
+/* =========================================================================
+   AZ GLOBAL SOP PORTAL — data, i18n, storage, rendering
+   Vanilla JS, no build step. Persistence via window.storage (artifact API).
+   ========================================================================= */
+
+/* ---------------------------- I18N ---------------------------- */
+const I18N = {
+en:{
+  appName:"AZ Global", appSub:"SOP Portal",
+  navDashboard:"Dashboard", navDepartments:"Departments", navAllSops:"All SOPs",
+  navRecent:"Recently Updated", navFavorites:"Favorites", navSearch:"Search", navAdmin:"Admin Panel",
+  searchPlaceholder:"Search SOPs...", searchPlaceholderShort:"Search SOPs, codes, departments…",
+  home:"Home",
+  viewSops:"View SOPs", viewSop:"View SOP", sopsCount:"SOPs",
+  recentlyAdded:"Recently Added SOPs", recentlyUpdated:"Recently Updated SOPs",
+  mostUsed:"Most Used SOPs", quickAccess:"Quick Access", viewAll:"View all",
+  totalSops:"Total SOPs", totalDepts:"Departments", activeCount:"Active", draftCount:"Draft", archivedCount:"Archived",
+  statusActive:"Active", statusDraft:"Draft", statusArchived:"Archived",
+  filterDepartment:"Department", filterCategory:"Category", filterStatus:"Status", filterVersion:"Version",
+  allDepartments:"All departments", allCategories:"All categories", allStatuses:"All statuses",
+  code:"SOP Code", department:"Department", category:"Category", version:"Version",
+  effectiveDate:"Effective Date", lastUpdated:"Last Updated", responsiblePerson:"Responsible Person",
+  approvalStatus:"Approval Status",
+  purpose:"Purpose", scope:"Scope", responsibilities:"Responsibilities",
+  requiredDocs:"Required Documents / Tools", procedure:"Procedure",
+  approvalWorkflow:"Approval Workflow", relatedForms:"Related Forms", relatedSops:"Related SOPs",
+  versionHistory:"Version History",
+  addToFavorites:"Add to Favorites", removeFromFavorites:"Remove from Favorites",
+  edit:"Edit", delete:"Delete", archive:"Archive", save:"Save changes", cancel:"Cancel",
+  addDepartment:"Add Department", addSop:"Add SOP", addCategory:"Add category",
+  adminPanel:"Admin Panel", adminDepartments:"Departments", adminSops:"SOPs",
+  name:"Name", description:"Description", numSops:"# SOPs", actions:"Actions", order:"Order",
+  noResults:"No results found", noResultsSub:"Try a different search term or clear filters.",
+  emptyDeptTitle:"No SOPs in this category yet", emptyDeptSub:"Use the Admin Panel to add the first one.",
+  confirmDelete:"This action can't be undone. Delete anyway?",
+  saved:"Saved", deleted:"Deleted", added:"Added", updated:"Updated",
+  errorSaving:"Could not sync — kept locally for this session",
+  role:"Role", roleAdmin:"Admin", roleManager:"Manager", roleEmployee:"Employee",
+  notifications:"Notifications", noNotifications:"No recent updates",
+  breadcrumbAllSops:"All SOPs",
+  version_:"Version", by:"by", change:"Change", updatedByLbl:"Updated by",
+  document:"Document", form:"Form",
+  favoritesTitle:"Favorites", favoritesEmpty:"You haven't favorited any SOPs yet",
+  favoritesEmptySub:"Tap the star on any SOP to save it here for quick access.",
+  results:"results for", showing:"Showing",
+  languageLabel:"Language", downloadTitle:"Download portal file",
+  reorderUp:"Move up", reorderDown:"Move down",
+  addStep:"Add step", addRow:"Add row", removeStep:"Remove",
+  titleField:"SOP Title", titleFieldAr:"SOP Title (Arabic)",
+  purposeAr:"Purpose (Arabic)", scopeAr:"Scope (Arabic)",
+  descAr:"Description (Arabic)", nameAr:"Name (Arabic)",
+  status:"Status", newDeptModal:"New Department", editDeptModal:"Edit Department",
+  newSopModal:"New SOP", editSopModal:"Edit SOP",
+  colorLabel:"Accent color", monoLabel:"Badge letters (2)",
+  fieldRequired:"Required", stepsHint:"One step per line",
+  contentNote:"Full procedure documentation for this SOP is authored in English. Arabic summary is shown above.",
+  adminOnlyNote:"This action requires Admin access.",
+  yourRole:"Signed in as", switchRole:"switch role for demo",
+  companyTag:"Internal Knowledge Base",
+  searchResultsFor:"Search results",
+  clearFilters:"Clear filters",
+  goToAdmin:"Manage in Admin Panel",
+  attachPdf:"Attach PDF (optional)", attachHint:"Small files only — shared storage has a total 5MB cap across the whole portal.",
+  attachExisting:"Current file", noFile:"No file attached", replaceFile:"Replace file",
+  fileTooBig:"That file is too large for shared storage. Try a file under 1.5MB, or add it as a link instead.",
+  view:"View", download:"Download",
+  storageLocalNote:"Saved in this browser on this device only", storageSharedNote:"Saved and shared across the portal",
+  exportBackup:"Export backup", importBackup:"Import backup",
+  backupHint:"Download a backup file anytime, and load it back on any device or browser to restore or transfer your data.",
+  confirmImport:"This will replace all current departments and SOPs with the content of this backup file. Continue?",
+  importSuccess:"Backup imported", importError:"This file doesn't look like a valid AZ Global SOP Portal backup",
+},
+ar:{
+  appName:"إيه زد جلوبال", appSub:"بوابة إجراءات التشغيل القياسية",
+  navDashboard:"الرئيسية", navDepartments:"الإدارات", navAllSops:"جميع الإجراءات",
+  navRecent:"آخر التحديثات", navFavorites:"المفضلة", navSearch:"البحث", navAdmin:"لوحة التحكم",
+  searchPlaceholder:"بحث في الإجراءات...", searchPlaceholderShort:"بحث بالاسم أو الكود أو الإدارة…",
+  home:"الرئيسية",
+  viewSops:"عرض الإجراءات", viewSop:"عرض الإجراء", sopsCount:"إجراء",
+  recentlyAdded:"أحدث الإجراءات المضافة", recentlyUpdated:"آخر الإجراءات المحدثة",
+  mostUsed:"الأكثر استخدامًا", quickAccess:"وصول سريع", viewAll:"عرض الكل",
+  totalSops:"إجمالي الإجراءات", totalDepts:"الإدارات", activeCount:"فعّال", draftCount:"مسودة", archivedCount:"مؤرشف",
+  statusActive:"فعّال", statusDraft:"مسودة", statusArchived:"مؤرشف",
+  filterDepartment:"الإدارة", filterCategory:"الفئة", filterStatus:"الحالة", filterVersion:"الإصدار",
+  allDepartments:"جميع الإدارات", allCategories:"جميع الفئات", allStatuses:"جميع الحالات",
+  code:"كود الإجراء", department:"الإدارة", category:"الفئة", version:"الإصدار",
+  effectiveDate:"تاريخ السريان", lastUpdated:"آخر تحديث", responsiblePerson:"الشخص المسؤول",
+  approvalStatus:"حالة الاعتماد",
+  purpose:"الغرض", scope:"النطاق", responsibilities:"المسؤوليات",
+  requiredDocs:"المستندات / الأدوات المطلوبة", procedure:"خطوات التنفيذ",
+  approvalWorkflow:"مسار الاعتماد", relatedForms:"النماذج المرتبطة", relatedSops:"إجراءات ذات صلة",
+  versionHistory:"سجل الإصدارات",
+  addToFavorites:"إضافة للمفضلة", removeFromFavorites:"إزالة من المفضلة",
+  edit:"تعديل", delete:"حذف", archive:"أرشفة", save:"حفظ التغييرات", cancel:"إلغاء",
+  addDepartment:"إضافة إدارة", addSop:"إضافة إجراء", addCategory:"إضافة فئة",
+  adminPanel:"لوحة التحكم", adminDepartments:"الإدارات", adminSops:"الإجراءات",
+  name:"الاسم", description:"الوصف", numSops:"عدد الإجراءات", actions:"إجراءات", order:"الترتيب",
+  noResults:"لا توجد نتائج", noResultsSub:"جرّب كلمة بحث مختلفة أو أزل الفلاتر.",
+  emptyDeptTitle:"لا توجد إجراءات في هذه الفئة بعد", emptyDeptSub:"استخدم لوحة التحكم لإضافة أول إجراء.",
+  confirmDelete:"لا يمكن التراجع عن هذا الإجراء. هل تريد الحذف؟",
+  saved:"تم الحفظ", deleted:"تم الحذف", added:"تمت الإضافة", updated:"تم التحديث",
+  errorSaving:"تعذّر الحفظ في السحابة — تم الاحتفاظ بالتغييرات لهذه الجلسة فقط",
+  role:"الصلاحية", roleAdmin:"مسؤول", roleManager:"مدير", roleEmployee:"موظف",
+  notifications:"الإشعارات", noNotifications:"لا توجد تحديثات حديثة",
+  breadcrumbAllSops:"جميع الإجراءات",
+  version_:"إصدار", by:"بواسطة", change:"التعديل", updatedByLbl:"تم التحديث بواسطة",
+  document:"وثيقة", form:"نموذج",
+  favoritesTitle:"المفضلة", favoritesEmpty:"لم تقم بإضافة أي إجراء إلى المفضلة بعد",
+  favoritesEmptySub:"اضغط على أيقونة النجمة في أي إجراء لحفظه هنا للوصول السريع.",
+  results:"نتيجة بحث عن", showing:"عرض",
+  languageLabel:"اللغة", downloadTitle:"تحميل ملف البوابة",
+  reorderUp:"تحريك لأعلى", reorderDown:"تحريك لأسفل",
+  addStep:"إضافة خطوة", addRow:"إضافة صف", removeStep:"إزالة",
+  titleField:"عنوان الإجراء", titleFieldAr:"عنوان الإجراء (بالعربية)",
+  purposeAr:"الغرض (بالعربية)", scopeAr:"النطاق (بالعربية)",
+  descAr:"الوصف (بالعربية)", nameAr:"الاسم (بالعربية)",
+  status:"الحالة", newDeptModal:"إدارة جديدة", editDeptModal:"تعديل الإدارة",
+  newSopModal:"إجراء جديد", editSopModal:"تعديل الإجراء",
+  colorLabel:"لون التمييز", monoLabel:"حروف الشعار (2)",
+  fieldRequired:"مطلوب", stepsHint:"خطوة واحدة في كل سطر",
+  contentNote:"التوثيق الكامل لخطوات هذا الإجراء مكتوب بالإنجليزية. الملخص أعلاه متاح بالعربية.",
+  adminOnlyNote:"هذا الإجراء يتطلب صلاحية المسؤول.",
+  yourRole:"تسجيل الدخول كـ", switchRole:"تغيير الصلاحية للتجربة",
+  companyTag:"قاعدة المعرفة الداخلية",
+  searchResultsFor:"نتائج البحث",
+  clearFilters:"إزالة الفلاتر",
+  goToAdmin:"إدارة من لوحة التحكم",
+  attachPdf:"إرفاق ملف PDF (اختياري)", attachHint:"ملفات صغيرة فقط — مساحة التخزين المشتركة محدودة بـ 5 ميجابايت لكل البوابة.",
+  attachExisting:"الملف الحالي", noFile:"لا يوجد ملف مرفق", replaceFile:"استبدال الملف",
+  fileTooBig:"الملف كبير على مساحة التخزين المشتركة. جرّب ملفًا أصغر من 1.5 ميجابايت، أو أضفه كرابط بدلاً من ذلك.",
+  view:"عرض", download:"تحميل",
+  storageLocalNote:"يُحفظ في هذا المتصفح على هذا الجهاز فقط", storageSharedNote:"يُحفظ ويُشارك مع كل مستخدمي البوابة",
+  exportBackup:"تحميل نسخة احتياطية", importBackup:"استعادة نسخة احتياطية",
+  backupHint:"حمّل ملف نسخة احتياطية في أي وقت، وارفعه على أي جهاز أو متصفح لاستعادة أو نقل بياناتك بالكامل.",
+  confirmImport:"سيتم استبدال جميع الإدارات والإجراءات الحالية بمحتوى هذا الملف. هل تريد الاستمرار؟",
+  importSuccess:"تم استيراد النسخة الاحتياطية", importError:"هذا الملف لا يبدو نسخة احتياطية صحيحة من بوابة AZ Global",
+}
+};
+
+/* ---------------------------- DATA ---------------------------- */
+const DEPARTMENTS_DEFAULT = [
+ {id:"hr",color:"#3B6E8F",mono:"HR",
+  name:{en:"HR",ar:"الموارد البشرية"},
+  desc:{en:"Recruitment, onboarding, attendance, payroll and employee relations procedures.",ar:"إجراءات التعيين والتهيئة والحضور والأجور وعلاقات الموظفين."},
+  categories:[
+   {id:"recruitment",name:{en:"Recruitment",ar:"التعيين"}},
+   {id:"onboarding",name:{en:"Hiring & Onboarding",ar:"التوظيف والتهيئة"}},
+   {id:"attendance",name:{en:"Attendance",ar:"الحضور والانصراف"}},
+   {id:"leave",name:{en:"Leave Management",ar:"إدارة الإجازات"}},
+   {id:"payroll",name:{en:"Payroll",ar:"الأجور"}},
+   {id:"relations",name:{en:"Employee Relations",ar:"علاقات الموظفين"}},
+   {id:"performance",name:{en:"Performance Management",ar:"تقييم الأداء"}},
+   {id:"disciplinary",name:{en:"Disciplinary Actions",ar:"الإجراءات التأديبية"}},
+   {id:"termination",name:{en:"Resignation & Termination",ar:"الاستقالة وإنهاء الخدمة"}}
+  ]},
+ {id:"finance",color:"#1E8A5F",mono:"FIN",
+  name:{en:"Finance & Accounting",ar:"المالية والحسابات"},
+  desc:{en:"Cash handling, branch closing, customer payments and expense approval procedures.",ar:"إجراءات التعامل مع النقدية وإقفال الفروع ومدفوعات العملاء واعتماد المصروفات."},
+  categories:[
+   {id:"cash",name:{en:"Cash Management",ar:"إدارة النقدية"}},
+   {id:"closing",name:{en:"Branch Closing",ar:"إقفال الفروع"}},
+   {id:"payments",name:{en:"Customer Payments",ar:"مدفوعات العملاء"}},
+   {id:"expense",name:{en:"Expense Approval",ar:"اعتماد المصروفات"}}
+  ]},
+ {id:"sales",color:"#C58B0E",mono:"SAL",
+  name:{en:"Sales",ar:"المبيعات"},
+  desc:{en:"Customer registration, sales process, invoicing and delivery procedures.",ar:"إجراءات تسجيل العملاء وعملية البيع والفواتير والتسليم."},
+  categories:[
+   {id:"registration",name:{en:"Customer Registration",ar:"تسجيل العملاء"}},
+   {id:"process",name:{en:"Sales Process",ar:"عملية البيع"}},
+   {id:"invoicing",name:{en:"Invoicing",ar:"الفواتير"}},
+   {id:"delivery",name:{en:"Delivery",ar:"التسليم"}}
+  ]},
+ {id:"marketing",color:"#6B4C82",mono:"MKT",
+  name:{en:"Marketing",ar:"التسويق"},
+  desc:{en:"Campaign planning, branding and digital marketing approval procedures.",ar:"إجراءات تخطيط الحملات والهوية التجارية واعتماد التسويق الرقمي."},
+  categories:[
+   {id:"campaigns",name:{en:"Campaigns",ar:"الحملات"}},
+   {id:"branding",name:{en:"Branding",ar:"الهوية التجارية"}},
+   {id:"digital",name:{en:"Digital Marketing",ar:"التسويق الرقمي"}},
+   {id:"events",name:{en:"Events",ar:"الفعاليات"}}
+  ]},
+ {id:"procurement",color:"#A85C36",mono:"PRC",
+  name:{en:"Procurement",ar:"المشتريات"},
+  desc:{en:"Purchase requests, vendor evaluation and purchase order procedures.",ar:"إجراءات طلبات الشراء وتقييم الموردين وأوامر التوريد."},
+  categories:[
+   {id:"requests",name:{en:"Purchase Requests",ar:"طلبات الشراء"}},
+   {id:"vendors",name:{en:"Vendor Management",ar:"إدارة الموردين"}},
+   {id:"orders",name:{en:"Purchase Orders",ar:"أوامر التوريد"}},
+   {id:"contracts",name:{en:"Contracts",ar:"العقود"}}
+  ]},
+ {id:"warehouse",color:"#4A5A6A",mono:"WHS",
+  name:{en:"Warehouse & Inventory",ar:"المستودعات والمخزون"},
+  desc:{en:"Stock receiving, issuing, counting and inter-branch transfer procedures.",ar:"إجراءات استلام المخزون وصرفه وجرده والتحويل بين الفروع."},
+  categories:[
+   {id:"receiving",name:{en:"Stock Receiving",ar:"استلام المخزون"}},
+   {id:"issuing",name:{en:"Stock Issuing",ar:"صرف المخزون"}},
+   {id:"counting",name:{en:"Inventory Counting",ar:"الجرد"}},
+   {id:"transfer",name:{en:"Inter-Branch Transfer",ar:"التحويل بين الفروع"}}
+  ]},
+ {id:"logistics",color:"#2F6F76",mono:"LOG",
+  name:{en:"Shipping & Logistics",ar:"الشحن والخدمات اللوجستية"},
+  desc:{en:"Shipment scheduling, fleet dispatch and customs documentation procedures.",ar:"إجراءات جدولة الشحنات وتوزيع الأسطول ومستندات الجمارك."},
+  categories:[
+   {id:"shipping",name:{en:"Shipping",ar:"الشحن"}},
+   {id:"deliveryscheduling",name:{en:"Delivery Scheduling",ar:"جدولة التسليم"}},
+   {id:"fleet",name:{en:"Fleet Management",ar:"إدارة الأسطول"}},
+   {id:"customs",name:{en:"Customs & Documentation",ar:"الجمارك والمستندات"}}
+  ]},
+ {id:"maintenance",color:"#8A6D3B",mono:"MNT",
+  name:{en:"Maintenance / Technical",ar:"الصيانة / الفني"},
+  desc:{en:"Preventive maintenance, breakdown response and safety inspection procedures.",ar:"إجراءات الصيانة الدورية والاستجابة للأعطال وفحص السلامة."},
+  categories:[
+   {id:"preventive",name:{en:"Preventive Maintenance",ar:"الصيانة الدورية"}},
+   {id:"breakdown",name:{en:"Breakdown Repair",ar:"إصلاح الأعطال"}},
+   {id:"calibration",name:{en:"Equipment Calibration",ar:"معايرة المعدات"}},
+   {id:"safety",name:{en:"Safety Inspection",ar:"فحص السلامة"}}
+  ]},
+ {id:"branch",color:"#4C6B3B",mono:"BRN",
+  name:{en:"Branch Operations",ar:"عمليات الفروع"},
+  desc:{en:"Branch opening, closing and internal audit procedures.",ar:"إجراءات فتح وإقفال الفروع والتدقيق الداخلي."},
+  categories:[
+   {id:"opening",name:{en:"Opening Procedures",ar:"إجراءات الفتح"}},
+   {id:"daily",name:{en:"Daily Operations",ar:"العمليات اليومية"}},
+   {id:"closingp",name:{en:"Closing Procedures",ar:"إجراءات الإقفال"}},
+   {id:"audits",name:{en:"Branch Audits",ar:"تدقيق الفروع"}}
+  ]},
+ {id:"customerservice",color:"#3F7D6B",mono:"CS",
+  name:{en:"Customer Service",ar:"خدمة العملاء"},
+  desc:{en:"Complaint handling, returns and service request procedures.",ar:"إجراءات التعامل مع الشكاوى والمرتجعات وطلبات الخدمة."},
+  categories:[
+   {id:"complaints",name:{en:"Complaint Handling",ar:"التعامل مع الشكاوى"}},
+   {id:"inquiries",name:{en:"Customer Inquiries",ar:"استعلامات العملاء"}},
+   {id:"returns",name:{en:"Returns & Refunds",ar:"المرتجعات والاسترداد"}},
+   {id:"servicereq",name:{en:"Service Requests",ar:"طلبات الخدمة"}}
+  ]},
+ {id:"administration",color:"#5B5F6B",mono:"ADM",
+  name:{en:"Administration",ar:"الشؤون الإدارية"},
+  desc:{en:"Document control, facilities and travel request procedures.",ar:"إجراءات ضبط الوثائق والمرافق وطلبات السفر."},
+  categories:[
+   {id:"doccontrol",name:{en:"Document Control",ar:"ضبط الوثائق"}},
+   {id:"facilities",name:{en:"Facilities Management",ar:"إدارة المرافق"}},
+   {id:"travel",name:{en:"Travel & Expenses",ar:"السفر والمصروفات"}},
+   {id:"general",name:{en:"General Admin",ar:"الشؤون العامة"}}
+  ]}
+];
+
+function S(en,ar){return {en:en,ar:ar};}
+
+const SOPS_DEFAULT = [
+{id:"HR-REC-001",code:"HR-REC-001",dept:"hr",category:"recruitment",
+ title:S("Recruitment & Selection SOP","التعيين والاختيار"),
+ purpose:S("Ensure open positions are filled with qualified candidates through a consistent, fair and documented hiring process.","ضمان شغل الوظائف الشاغرة بمرشحين مؤهلين من خلال عملية توظيف متسقة وعادلة وموثقة."),
+ scope:S("Applies to all recruitment activity across departments and branches, from requisition to offer.","تنطبق على جميع أنشطة التوظيف في كافة الإدارات والفروع، من طلب التوظيف حتى تقديم العرض."),
+ version:"2.0",effectiveDate:"2024-02-10",lastUpdated:"2026-06-15",responsiblePerson:"Ahmed El-Sayed – HR Manager",status:"active",
+ responsibilities:[{role:"Hiring Manager",task:"Raises the manpower requisition and defines job requirements"},{role:"HR Recruiter",task:"Sources, screens and shortlists candidates"},{role:"HR Manager",task:"Approves final offer and salary package"}],
+ requiredDocs:["Manpower Requisition Form","Job Description Template","Interview Evaluation Sheet","Offer Letter Template"],
+ procedure:["Hiring manager submits a manpower requisition with an approved job description.","HR posts the vacancy internally and externally as required.","HR screens applications and shortlists candidates against the job requirements.","Shortlisted candidates are interviewed by the hiring manager and HR.","Interview panel completes the evaluation sheet and recommends a decision.","HR Manager approves the final candidate and salary offer.","HR issues the offer letter and confirms acceptance.","Candidate file is handed over to onboarding once accepted."],
+ approvalWorkflow:[{stage:"Requisition",actor:"Hiring Manager"},{stage:"Screening",actor:"HR Recruiter"},{stage:"Final Approval",actor:"HR Manager"}],
+ relatedForms:[{name:"Manpower Requisition Form",type:"Form"},{name:"Interview Evaluation Sheet",type:"Form"}],
+ relatedSops:["HR-ONB-001"],
+ versionHistory:[{version:"1.0",date:"2024-02-10",change:"Initial release",updatedBy:"Aya Mostafa"},{version:"2.0",date:"2026-06-15",change:"Added structured interview evaluation sheet",updatedBy:"Ahmed El-Sayed"}],
+ keywords:["recruitment","hiring","interview","job requisition"]},
+
+{id:"HR-ONB-001",code:"HR-ONB-001",dept:"hr",category:"onboarding",
+ title:S("New Employee Onboarding SOP","تهيئة الموظف الجديد"),
+ purpose:S("Provide new hires with a structured introduction to the company, their role and required documentation.","تقديم تهيئة منظمة للموظفين الجدد تشمل التعريف بالشركة والدور الوظيفي والمستندات المطلوبة."),
+ scope:S("Applies to all new employees from acceptance of offer through completion of the probation period.","تنطبق على جميع الموظفين الجدد من قبول العرض وحتى انتهاء فترة الاختبار."),
+ version:"1.0",effectiveDate:"2024-03-01",lastUpdated:"2025-11-05",responsiblePerson:"Aya Mostafa – HR Coordinator",status:"active",
+ responsibilities:[{role:"HR Coordinator",task:"Prepares onboarding kit and IT access request"},{role:"Direct Manager",task:"Delivers role induction and assigns a mentor"},{role:"New Employee",task:"Completes mandatory documentation and orientation"}],
+ requiredDocs:["Employment Contract","ID / National ID Copy","Bank Account Form","IT Access Request Form"],
+ procedure:["HR sends the offer acceptance confirmation and joining date.","HR prepares the employment contract and required documentation.","IT access, email and system accounts are requested before day one.","New employee attends company orientation on day one.","Direct manager conducts role-specific induction and assigns a mentor.","HR schedules a 30/60/90-day check-in during probation.","Probation review is completed and confirmed or extended."],
+ approvalWorkflow:[{stage:"Documentation",actor:"HR Coordinator"},{stage:"Induction",actor:"Direct Manager"},{stage:"Probation Review",actor:"HR Manager"}],
+ relatedForms:[{name:"Employment Contract",type:"Document"},{name:"IT Access Request Form",type:"Form"}],
+ relatedSops:["HR-REC-001"],
+ versionHistory:[{version:"1.0",date:"2024-03-01",change:"Initial release",updatedBy:"Aya Mostafa"}],
+ keywords:["onboarding","induction","new hire","probation"]},
+
+{id:"FIN-CSH-001",code:"FIN-CSH-001",dept:"finance",category:"cash",
+ title:S("Cash Collection SOP","تحصيل النقدية"),
+ purpose:S("Ensure all cash collected at branches is recorded, verified and deposited securely.","ضمان تسجيل جميع النقدية المحصلة في الفروع والتحقق منها وإيداعها بشكل آمن."),
+ scope:S("Applies to all branch cashiers and finance staff handling cash receipts.","تنطبق على جميع أمناء الصندوق وموظفي المالية الذين يتعاملون مع المقبوضات النقدية."),
+ version:"1.1",effectiveDate:"2023-09-12",lastUpdated:"2026-01-20",responsiblePerson:"Mona Farouk – Finance Manager",status:"active",
+ responsibilities:[{role:"Branch Cashier",task:"Collects payment and issues receipt"},{role:"Branch Accountant",task:"Reconciles daily cash against receipts"},{role:"Finance Manager",task:"Approves bank deposit and reviews variances"}],
+ requiredDocs:["Cash Receipt Voucher","Daily Cash Reconciliation Sheet","Bank Deposit Slip"],
+ procedure:["Cashier receives payment and issues a numbered receipt.","Payment is recorded in the daily cash register at time of collection.","Branch accountant reconciles collected cash against issued receipts at end of day.","Any variance is investigated and documented immediately.","Cash is counted, sealed and prepared for bank deposit.","Finance Manager reviews and approves the deposit slip.","Cash is deposited at the bank within the defined timeframe.","Deposit confirmation is filed with the daily reconciliation sheet."],
+ approvalWorkflow:[{stage:"Collection",actor:"Branch Cashier"},{stage:"Reconciliation",actor:"Branch Accountant"},{stage:"Deposit Approval",actor:"Finance Manager"}],
+ relatedForms:[{name:"Cash Receipt Voucher",type:"Form"},{name:"Daily Cash Reconciliation Sheet",type:"Form"}],
+ relatedSops:["FIN-CLS-001"],
+ versionHistory:[{version:"1.0",date:"2023-09-12",change:"Initial release",updatedBy:"Mona Farouk"},{version:"1.1",date:"2026-01-20",change:"Added same-day variance investigation step",updatedBy:"Mona Farouk"}],
+ keywords:["cash","collection","deposit","reconciliation"]},
+
+{id:"FIN-CLS-001",code:"FIN-CLS-001",dept:"finance",category:"closing",
+ title:S("Branch Daily Closing SOP","إقفال الفرع اليومي"),
+ purpose:S("Standardize the end-of-day closing process to ensure accurate daily financial reporting.","توحيد إجراءات إقفال نهاية اليوم لضمان دقة التقارير المالية اليومية."),
+ scope:S("Applies to all branches at the close of each business day.","تنطبق على جميع الفروع في ختام كل يوم عمل."),
+ version:"1.0",effectiveDate:"2024-01-05",lastUpdated:"2025-08-22",responsiblePerson:"Mona Farouk – Finance Manager",status:"active",
+ responsibilities:[{role:"Branch Accountant",task:"Closes the point-of-sale and reconciles all payment types"},{role:"Branch Manager",task:"Reviews and signs off the daily closing report"},{role:"Finance Department",task:"Consolidates branch closings into daily reports"}],
+ requiredDocs:["Daily Closing Report Template","Point-of-Sale Summary","Sign-off Sheet"],
+ procedure:["Branch accountant closes the point-of-sale system at end of business hours.","Cash, card and credit sales are reconciled against system totals.","Any discrepancies are noted with an explanation.","Daily closing report is prepared summarizing all payment types.","Branch manager reviews and signs off the closing report.","Signed report and supporting documents are sent to Finance the next morning.","Finance consolidates all branch closings into the daily report."],
+ approvalWorkflow:[{stage:"Reconciliation",actor:"Branch Accountant"},{stage:"Sign-off",actor:"Branch Manager"},{stage:"Consolidation",actor:"Finance Department"}],
+ relatedForms:[{name:"Daily Closing Report Template",type:"Form"}],
+ relatedSops:["FIN-CSH-001"],
+ versionHistory:[{version:"1.0",date:"2024-01-05",change:"Initial release",updatedBy:"Mona Farouk"}],
+ keywords:["closing","branch","daily report","reconciliation"]},
+
+{id:"SAL-REG-001",code:"SAL-REG-001",dept:"sales",category:"registration",
+ title:S("Customer Registration SOP","تسجيل العملاء"),
+ purpose:S("Ensure new customers are registered accurately with complete and verified information.","ضمان تسجيل العملاء الجدد بدقة وبمعلومات كاملة وموثقة."),
+ scope:S("Applies to sales staff registering new individual or corporate customers.","تنطبق على موظفي المبيعات عند تسجيل عملاء جدد أفراد أو شركات."),
+ version:"1.0",effectiveDate:"2024-04-18",lastUpdated:"2025-05-30",responsiblePerson:"Karim Adel – Sales Manager",status:"active",
+ responsibilities:[{role:"Sales Representative",task:"Collects customer data and required documents"},{role:"Sales Coordinator",task:"Verifies data and creates the customer record"},{role:"Credit Control",task:"Approves credit terms for corporate accounts"}],
+ requiredDocs:["Customer Registration Form","Commercial Registry (corporate)","Tax Card Copy","National ID Copy (individual)"],
+ procedure:["Sales representative collects customer details and required documents.","Customer registration form is completed in full.","Sales coordinator verifies the submitted documents.","Customer record is created in the system with a unique customer code.","For corporate accounts, credit control reviews and sets credit terms.","Registration is confirmed and the customer file is archived."],
+ approvalWorkflow:[{stage:"Data Collection",actor:"Sales Representative"},{stage:"Verification",actor:"Sales Coordinator"},{stage:"Credit Approval",actor:"Credit Control"}],
+ relatedForms:[{name:"Customer Registration Form",type:"Form"}],
+ relatedSops:["SAL-PRC-001"],
+ versionHistory:[{version:"1.0",date:"2024-04-18",change:"Initial release",updatedBy:"Karim Adel"}],
+ keywords:["customer","registration","credit terms"]},
+
+{id:"SAL-PRC-001",code:"SAL-PRC-001",dept:"sales",category:"process",
+ title:S("Machine Sales Process SOP","عملية بيع الماكينات"),
+ purpose:S("Define a consistent process for quoting, negotiating and closing machine sales.","تحديد عملية متسقة لعرض الأسعار والتفاوض وإتمام صفقات بيع الماكينات."),
+ scope:S("Applies to the sales team handling industrial machine sales to new and existing customers.","تنطبق على فريق المبيعات المسؤول عن بيع الماكينات الصناعية للعملاء الجدد والحاليين."),
+ version:"1.2",effectiveDate:"2023-11-02",lastUpdated:"2026-03-10",responsiblePerson:"Karim Adel – Sales Manager",status:"active",
+ responsibilities:[{role:"Sales Representative",task:"Prepares quotation and negotiates with customer"},{role:"Sales Manager",task:"Approves pricing outside standard list"},{role:"Technical Team",task:"Confirms machine specifications and delivery lead time"}],
+ requiredDocs:["Price Quotation Template","Technical Specification Sheet","Sales Contract"],
+ procedure:["Sales representative qualifies the customer requirement.","Technical team confirms specifications and availability.","Quotation is prepared and shared with the customer.","Negotiation is conducted within approved pricing guidelines.","Sales manager approves any pricing exception.","Customer signs the sales contract and pays the agreed deposit.","Order is handed over to the delivery team."],
+ approvalWorkflow:[{stage:"Quotation",actor:"Sales Representative"},{stage:"Technical Confirmation",actor:"Technical Team"},{stage:"Pricing Approval",actor:"Sales Manager"}],
+ relatedForms:[{name:"Price Quotation Template",type:"Form"},{name:"Sales Contract",type:"Document"}],
+ relatedSops:["SAL-REG-001"],
+ versionHistory:[{version:"1.0",date:"2023-11-02",change:"Initial release",updatedBy:"Karim Adel"},{version:"1.2",date:"2026-03-10",change:"Updated pricing exception approval limits",updatedBy:"Karim Adel"}],
+ keywords:["machine sales","quotation","contract","negotiation"]},
+
+{id:"WHS-REC-001",code:"WHS-REC-001",dept:"warehouse",category:"receiving",
+ title:S("Stock Receiving SOP","استلام المخزون"),
+ purpose:S("Ensure incoming stock is inspected, counted and recorded accurately upon arrival.","ضمان فحص وعد وتسجيل المخزون الوارد بدقة عند الاستلام."),
+ scope:S("Applies to warehouse staff receiving goods from suppliers or other branches.","تنطبق على موظفي المستودع عند استلام البضائع من الموردين أو الفروع الأخرى."),
+ version:"1.0",effectiveDate:"2023-07-19",lastUpdated:"2025-09-14",responsiblePerson:"Tarek Hassan – Warehouse Supervisor",status:"active",
+ responsibilities:[{role:"Warehouse Clerk",task:"Inspects and counts received items against the delivery note"},{role:"Warehouse Supervisor",task:"Approves the goods received note"},{role:"Procurement",task:"Resolves discrepancies with the supplier"}],
+ requiredDocs:["Delivery Note","Goods Received Note (GRN)","Purchase Order Copy"],
+ procedure:["Warehouse clerk checks the delivery against the purchase order.","Items are physically counted and inspected for damage.","Any discrepancy or damage is noted on the delivery note.","Goods Received Note is prepared and matched to the purchase order.","Warehouse supervisor approves the GRN.","Stock is updated in the inventory system.","Items are moved to their designated storage location.","Procurement is notified of any discrepancy for supplier follow-up."],
+ approvalWorkflow:[{stage:"Inspection",actor:"Warehouse Clerk"},{stage:"GRN Approval",actor:"Warehouse Supervisor"},{stage:"Discrepancy Resolution",actor:"Procurement"}],
+ relatedForms:[{name:"Goods Received Note",type:"Form"}],
+ relatedSops:["WHS-CNT-001"],
+ versionHistory:[{version:"1.0",date:"2023-07-19",change:"Initial release",updatedBy:"Tarek Hassan"}],
+ keywords:["receiving","stock","GRN","inspection"]},
+
+{id:"WHS-CNT-001",code:"WHS-CNT-001",dept:"warehouse",category:"counting",
+ title:S("Inventory Counting SOP","جرد المخزون"),
+ purpose:S("Ensure inventory records match physical stock through regular counting cycles.","ضمان تطابق سجلات المخزون مع الكميات الفعلية من خلال دورات جرد منتظمة."),
+ scope:S("Applies to all warehouse locations conducting periodic or annual stock counts.","تنطبق على جميع مواقع المستودعات التي تقوم بجرد دوري أو سنوي."),
+ version:"1.0",effectiveDate:"2024-05-01",lastUpdated:"2026-02-08",responsiblePerson:"Tarek Hassan – Warehouse Supervisor",status:"draft",
+ responsibilities:[{role:"Warehouse Team",task:"Performs the physical count"},{role:"Warehouse Supervisor",task:"Reviews count sheets and investigates variances"},{role:"Finance",task:"Approves inventory adjustments"}],
+ requiredDocs:["Stock Count Sheet","Variance Report","Inventory Adjustment Form"],
+ procedure:["Count schedule and team assignments are published in advance.","Warehouse is organized and count sheets are prepared per location.","Physical count is performed and recorded on count sheets.","Counted quantities are compared against system records.","Variances above the tolerance threshold are recounted.","Variance report is prepared with explanations.","Finance approves the inventory adjustment.","System stock levels are updated to match the approved count."],
+ approvalWorkflow:[{stage:"Physical Count",actor:"Warehouse Team"},{stage:"Variance Review",actor:"Warehouse Supervisor"},{stage:"Adjustment Approval",actor:"Finance"}],
+ relatedForms:[{name:"Stock Count Sheet",type:"Form"},{name:"Inventory Adjustment Form",type:"Form"}],
+ relatedSops:["WHS-REC-001"],
+ versionHistory:[{version:"1.0",date:"2024-05-01",change:"Initial release",updatedBy:"Tarek Hassan"}],
+ keywords:["inventory","counting","variance","adjustment"]},
+
+{id:"MKT-CMP-001",code:"MKT-CMP-001",dept:"marketing",category:"campaigns",
+ title:S("Marketing Campaign Planning SOP","تخطيط الحملات التسويقية"),
+ purpose:S("Ensure marketing campaigns are planned, budgeted and approved before launch.","ضمان تخطيط الحملات التسويقية وتحديد ميزانيتها واعتمادها قبل الإطلاق."),
+ scope:S("Applies to all marketing campaigns across digital and traditional channels.","تنطبق على جميع الحملات التسويقية عبر القنوات الرقمية والتقليدية."),
+ version:"1.0",effectiveDate:"2024-06-11",lastUpdated:"2025-12-01",responsiblePerson:"Nour Ibrahim – Marketing Manager",status:"active",
+ responsibilities:[{role:"Marketing Executive",task:"Drafts campaign brief and budget"},{role:"Marketing Manager",task:"Reviews creative and media plan"},{role:"Finance",task:"Confirms budget availability"}],
+ requiredDocs:["Campaign Brief Template","Budget Estimate","Media Plan"],
+ procedure:["Marketing executive drafts the campaign brief and objectives.","Budget estimate is prepared and submitted to Finance.","Finance confirms budget availability.","Creative concept and media plan are developed.","Marketing manager reviews and approves the final campaign.","Campaign is scheduled and launched across selected channels.","Performance is tracked and reported after completion."],
+ approvalWorkflow:[{stage:"Brief",actor:"Marketing Executive"},{stage:"Budget Check",actor:"Finance"},{stage:"Final Approval",actor:"Marketing Manager"}],
+ relatedForms:[{name:"Campaign Brief Template",type:"Form"}],
+ relatedSops:["MKT-SOC-001"],
+ versionHistory:[{version:"1.0",date:"2024-06-11",change:"Initial release",updatedBy:"Nour Ibrahim"}],
+ keywords:["campaign","marketing","budget","media plan"]},
+
+{id:"MKT-SOC-001",code:"MKT-SOC-001",dept:"marketing",category:"digital",
+ title:S("Social Media Content Approval SOP","اعتماد محتوى السوشيال ميديا"),
+ purpose:S("Ensure all social media content is reviewed and approved before publishing.","ضمان مراجعة واعتماد جميع محتويات السوشيال ميديا قبل النشر."),
+ scope:S("Applies to all content published on the company's official social media accounts.","تنطبق على جميع المحتويات المنشورة على حسابات الشركة الرسمية على مواقع التواصل الاجتماعي."),
+ version:"1.0",effectiveDate:"2025-01-15",lastUpdated:"2025-01-15",responsiblePerson:"Nour Ibrahim – Marketing Manager",status:"draft",
+ responsibilities:[{role:"Content Creator",task:"Drafts post copy and visuals"},{role:"Marketing Executive",task:"Reviews brand and language accuracy"},{role:"Marketing Manager",task:"Gives final publishing approval"}],
+ requiredDocs:["Content Calendar","Brand Guidelines","Approval Checklist"],
+ procedure:["Content creator drafts the post based on the content calendar.","Draft is checked against brand guidelines.","Marketing executive reviews copy, visuals and language.","Marketing manager gives final approval.","Approved content is scheduled for publishing.","Post performance is monitored after publishing."],
+ approvalWorkflow:[{stage:"Draft Review",actor:"Marketing Executive"},{stage:"Final Approval",actor:"Marketing Manager"}],
+ relatedForms:[{name:"Content Calendar",type:"Document"}],
+ relatedSops:["MKT-CMP-001"],
+ versionHistory:[{version:"1.0",date:"2025-01-15",change:"Initial release",updatedBy:"Nour Ibrahim"}],
+ keywords:["social media","content","approval","branding"]},
+
+{id:"PRC-REQ-001",code:"PRC-REQ-001",dept:"procurement",category:"requests",
+ title:S("Purchase Request SOP","طلب الشراء"),
+ purpose:S("Ensure purchase requests are justified, budgeted and approved before procurement action.","ضمان تبرير طلبات الشراء وتحديد ميزانيتها واعتمادها قبل اتخاذ إجراء الشراء."),
+ scope:S("Applies to all departments requesting goods or services.","تنطبق على جميع الإدارات التي تطلب سلعاً أو خدمات."),
+ version:"1.0",effectiveDate:"2023-10-08",lastUpdated:"2025-07-19",responsiblePerson:"Sherif Mahmoud – Procurement Manager",status:"active",
+ responsibilities:[{role:"Requesting Department",task:"Submits the purchase request with justification"},{role:"Department Head",task:"Approves the request"},{role:"Procurement Officer",task:"Sources quotations and processes the request"}],
+ requiredDocs:["Purchase Request Form","Budget Reference","Quotation Comparison Sheet"],
+ procedure:["Requesting department fills the purchase request form.","Department head reviews and approves the request.","Procurement sources at least three quotations for items above the defined threshold.","Quotation comparison sheet is prepared.","Procurement manager selects the best offer.","Purchase order is issued to the selected vendor."],
+ approvalWorkflow:[{stage:"Request",actor:"Requesting Department"},{stage:"Department Approval",actor:"Department Head"},{stage:"Sourcing",actor:"Procurement Officer"}],
+ relatedForms:[{name:"Purchase Request Form",type:"Form"}],
+ relatedSops:["PRC-PO-001"],
+ versionHistory:[{version:"1.0",date:"2023-10-08",change:"Initial release",updatedBy:"Sherif Mahmoud"}],
+ keywords:["purchase request","procurement","quotation"]},
+
+{id:"PRC-PO-001",code:"PRC-PO-001",dept:"procurement",category:"orders",
+ title:S("Purchase Order Issuance SOP","إصدار أمر التوريد"),
+ purpose:S("Standardize the issuance and approval of purchase orders to vendors.","توحيد إصدار واعتماد أوامر التوريد الموجهة للموردين."),
+ scope:S("Applies to procurement staff issuing purchase orders for approved purchase requests.","تنطبق على موظفي المشتريات عند إصدار أوامر التوريد لطلبات الشراء المعتمدة."),
+ version:"1.0",effectiveDate:"2023-10-20",lastUpdated:"2025-07-19",responsiblePerson:"Sherif Mahmoud – Procurement Manager",status:"active",
+ responsibilities:[{role:"Procurement Officer",task:"Prepares the purchase order"},{role:"Procurement Manager",task:"Approves the purchase order"},{role:"Vendor",task:"Confirms acceptance and delivery date"}],
+ requiredDocs:["Purchase Order Template","Approved Purchase Request","Vendor Quotation"],
+ procedure:["Procurement officer prepares the purchase order based on the approved request.","Purchase order is checked against the selected quotation.","Procurement manager approves the purchase order.","Purchase order is sent to the vendor.","Vendor confirms acceptance and delivery timeline.","Copy of the confirmed order is filed and shared with warehouse."],
+ approvalWorkflow:[{stage:"Preparation",actor:"Procurement Officer"},{stage:"Approval",actor:"Procurement Manager"},{stage:"Vendor Confirmation",actor:"Vendor"}],
+ relatedForms:[{name:"Purchase Order Template",type:"Form"}],
+ relatedSops:["PRC-REQ-001"],
+ versionHistory:[{version:"1.0",date:"2023-10-20",change:"Initial release",updatedBy:"Sherif Mahmoud"}],
+ keywords:["purchase order","vendor","procurement"]},
+
+{id:"LOG-SHP-001",code:"LOG-SHP-001",dept:"logistics",category:"shipping",
+ title:S("Shipment Scheduling SOP","جدولة الشحنات"),
+ purpose:S("Ensure customer shipments are scheduled and dispatched on time.","ضمان جدولة شحنات العملاء وتسليمها في الوقت المحدد."),
+ scope:S("Applies to logistics staff scheduling outbound shipments to customers and branches.","تنطبق على موظفي اللوجستيات عند جدولة الشحنات الخارجة للعملاء والفروع."),
+ version:"1.0",effectiveDate:"2024-02-25",lastUpdated:"2025-10-11",responsiblePerson:"Hossam Zaki – Logistics Manager",status:"active",
+ responsibilities:[{role:"Logistics Coordinator",task:"Schedules shipment and assigns transport"},{role:"Warehouse",task:"Prepares goods for dispatch"},{role:"Driver",task:"Delivers shipment and obtains proof of delivery"}],
+ requiredDocs:["Shipment Schedule Sheet","Delivery Note","Proof of Delivery Form"],
+ procedure:["Logistics coordinator reviews confirmed sales orders due for delivery.","Shipment schedule is prepared based on delivery priority and location.","Warehouse is notified to prepare goods for dispatch.","Transport is assigned based on shipment size and destination.","Driver collects the delivery note and dispatches the shipment.","Proof of delivery is collected and returned to logistics.","Delivery status is updated in the system."],
+ approvalWorkflow:[{stage:"Scheduling",actor:"Logistics Coordinator"},{stage:"Dispatch",actor:"Warehouse"},{stage:"Delivery Confirmation",actor:"Driver"}],
+ relatedForms:[{name:"Proof of Delivery Form",type:"Form"}],
+ relatedSops:["LOG-FLT-001"],
+ versionHistory:[{version:"1.0",date:"2024-02-25",change:"Initial release",updatedBy:"Hossam Zaki"}],
+ keywords:["shipment","delivery","dispatch","scheduling"]},
+
+{id:"LOG-FLT-001",code:"LOG-FLT-001",dept:"logistics",category:"fleet",
+ title:S("Fleet Dispatch & Vehicle Assignment SOP","توزيع أسطول المركبات"),
+ purpose:S("Ensure company vehicles are assigned efficiently and maintained on schedule.","ضمان توزيع مركبات الشركة بكفاءة وصيانتها في مواعيدها."),
+ scope:S("Applies to all company-owned or leased vehicles used for delivery and field operations.","تنطبق على جميع المركبات المملوكة أو المستأجرة والمستخدمة في التسليم والعمليات الميدانية."),
+ version:"1.0",effectiveDate:"2024-08-14",lastUpdated:"2024-08-14",responsiblePerson:"Hossam Zaki – Logistics Manager",status:"archived",
+ responsibilities:[{role:"Fleet Coordinator",task:"Assigns vehicles to daily delivery routes"},{role:"Driver",task:"Conducts pre-trip vehicle check"},{role:"Maintenance Department",task:"Schedules preventive vehicle maintenance"}],
+ requiredDocs:["Vehicle Assignment Sheet","Pre-Trip Checklist","Maintenance Log"],
+ procedure:["Fleet coordinator reviews daily delivery requirements.","Vehicles are assigned based on route and load capacity.","Driver performs a pre-trip checklist before departure.","Any defect found is reported before the vehicle is dispatched.","Vehicle usage and mileage are logged after each trip.","Maintenance department schedules service based on mileage intervals."],
+ approvalWorkflow:[{stage:"Assignment",actor:"Fleet Coordinator"},{stage:"Pre-Trip Check",actor:"Driver"},{stage:"Maintenance Scheduling",actor:"Maintenance Department"}],
+ relatedForms:[{name:"Pre-Trip Checklist",type:"Form"}],
+ relatedSops:["LOG-SHP-001"],
+ versionHistory:[{version:"1.0",date:"2024-08-14",change:"Initial release",updatedBy:"Hossam Zaki"}],
+ keywords:["fleet","vehicle","dispatch","maintenance"]},
+
+{id:"MNT-PRV-001",code:"MNT-PRV-001",dept:"maintenance",category:"preventive",
+ title:S("Preventive Maintenance Schedule SOP","جدول الصيانة الدورية"),
+ purpose:S("Reduce equipment breakdowns through scheduled preventive maintenance.","الحد من أعطال المعدات من خلال صيانة دورية مجدولة."),
+ scope:S("Applies to all production and warehouse equipment under the maintenance program.","تنطبق على جميع معدات الإنتاج والمستودعات الخاضعة لبرنامج الصيانة."),
+ version:"1.0",effectiveDate:"2023-12-01",lastUpdated:"2025-06-17",responsiblePerson:"Wael Fathy – Maintenance Supervisor",status:"active",
+ responsibilities:[{role:"Maintenance Technician",task:"Performs scheduled maintenance tasks"},{role:"Maintenance Supervisor",task:"Plans the maintenance calendar"},{role:"Equipment Owner (Dept.)",task:"Makes equipment available for scheduled maintenance"}],
+ requiredDocs:["Maintenance Calendar","Equipment Checklist","Maintenance Log Sheet"],
+ procedure:["Maintenance supervisor prepares the annual preventive maintenance calendar.","Equipment owning department is notified in advance of scheduled downtime.","Technician performs maintenance tasks per the equipment checklist.","Parts replaced or adjustments made are recorded in the log sheet.","Equipment is tested before being returned to operation.","Maintenance supervisor reviews completed logs monthly."],
+ approvalWorkflow:[{stage:"Planning",actor:"Maintenance Supervisor"},{stage:"Execution",actor:"Maintenance Technician"},{stage:"Review",actor:"Maintenance Supervisor"}],
+ relatedForms:[{name:"Maintenance Log Sheet",type:"Form"}],
+ relatedSops:["MNT-BRK-001"],
+ versionHistory:[{version:"1.0",date:"2023-12-01",change:"Initial release",updatedBy:"Wael Fathy"}],
+ keywords:["maintenance","preventive","equipment","schedule"]},
+
+{id:"MNT-BRK-001",code:"MNT-BRK-001",dept:"maintenance",category:"breakdown",
+ title:S("Equipment Breakdown Response SOP","الاستجابة لأعطال المعدات"),
+ purpose:S("Ensure equipment breakdowns are reported and resolved quickly to minimize downtime.","ضمان الإبلاغ عن أعطال المعدات وحلها سريعاً للحد من وقت التوقف."),
+ scope:S("Applies to any breakdown of production, warehouse or facility equipment.","تنطبق على أي عطل يحدث في معدات الإنتاج أو المستودعات أو المرافق."),
+ version:"1.0",effectiveDate:"2024-01-22",lastUpdated:"2026-04-02",responsiblePerson:"Wael Fathy – Maintenance Supervisor",status:"active",
+ responsibilities:[{role:"Equipment Operator",task:"Reports the breakdown immediately"},{role:"Maintenance Technician",task:"Diagnoses and repairs the fault"},{role:"Maintenance Supervisor",task:"Escalates if repair exceeds downtime limits"}],
+ requiredDocs:["Breakdown Report Form","Spare Parts Request Form"],
+ procedure:["Operator stops the equipment safely and reports the breakdown.","Breakdown report form is filled with fault details.","Maintenance technician is dispatched to diagnose the issue.","Required spare parts are requested if not in stock.","Repair is carried out and equipment is tested.","If downtime exceeds the defined limit, supervisor escalates to management.","Breakdown is closed and logged with root cause and resolution."],
+ approvalWorkflow:[{stage:"Reporting",actor:"Equipment Operator"},{stage:"Diagnosis & Repair",actor:"Maintenance Technician"},{stage:"Escalation",actor:"Maintenance Supervisor"}],
+ relatedForms:[{name:"Breakdown Report Form",type:"Form"}],
+ relatedSops:["MNT-PRV-001"],
+ versionHistory:[{version:"1.0",date:"2024-01-22",change:"Initial release",updatedBy:"Wael Fathy"}],
+ keywords:["breakdown","repair","downtime","equipment"]},
+
+{id:"BRN-OPN-001",code:"BRN-OPN-001",dept:"branch",category:"opening",
+ title:S("Branch Opening Checklist SOP","قائمة فتح الفرع"),
+ purpose:S("Ensure branches open on time and are fully ready for daily operations.","ضمان فتح الفروع في الوقت المحدد وجاهزيتها الكاملة للعمليات اليومية."),
+ scope:S("Applies to branch staff responsible for daily opening procedures.","تنطبق على موظفي الفرع المسؤولين عن إجراءات الفتح اليومية."),
+ version:"1.0",effectiveDate:"2023-06-01",lastUpdated:"2024-09-15",responsiblePerson:"Rania Adly – Branch Operations Manager",status:"active",
+ responsibilities:[{role:"Branch Supervisor",task:"Oversees the opening checklist"},{role:"Cashier",task:"Prepares the point-of-sale and starting cash float"},{role:"Security",task:"Confirms premises are secure and safe"}],
+ requiredDocs:["Branch Opening Checklist","Cash Float Sheet"],
+ procedure:["Security confirms the branch is secure before staff entry.","Branch supervisor reviews the opening checklist.","Cashier prepares the point-of-sale system and starting float.","Lighting, displays and equipment are checked and switched on.","Any issue found is logged and reported to branch management.","Branch is marked ready and opened to customers at scheduled time."],
+ approvalWorkflow:[{stage:"Security Check",actor:"Security"},{stage:"Checklist Review",actor:"Branch Supervisor"},{stage:"Opening Confirmation",actor:"Branch Manager"}],
+ relatedForms:[{name:"Branch Opening Checklist",type:"Form"}],
+ relatedSops:["BRN-CLS-001"],
+ versionHistory:[{version:"1.0",date:"2023-06-01",change:"Initial release",updatedBy:"Rania Adly"}],
+ keywords:["branch","opening","checklist"]},
+
+{id:"BRN-CLS-001",code:"BRN-CLS-001",dept:"branch",category:"closingp",
+ title:S("Branch Closing Checklist SOP","قائمة إقفال الفرع"),
+ purpose:S("Ensure branches close securely with all daily tasks completed.","ضمان إقفال الفروع بشكل آمن مع إتمام كافة المهام اليومية."),
+ scope:S("Applies to branch staff responsible for daily closing procedures.","تنطبق على موظفي الفرع المسؤولين عن إجراءات الإقفال اليومية."),
+ version:"1.0",effectiveDate:"2023-06-01",lastUpdated:"2024-09-15",responsiblePerson:"Rania Adly – Branch Operations Manager",status:"active",
+ responsibilities:[{role:"Cashier",task:"Closes the point-of-sale and reconciles cash"},{role:"Branch Supervisor",task:"Reviews the closing checklist"},{role:"Security",task:"Secures the premises after closing"}],
+ requiredDocs:["Branch Closing Checklist","Daily Sales Summary"],
+ procedure:["Cashier closes the point-of-sale and reconciles the daily sales.","Branch supervisor reviews the closing checklist and sales summary.","Equipment and displays are switched off and secured.","Cash is prepared for deposit per the cash collection SOP.","Security locks and alarms the premises.","Closing checklist is signed and filed."],
+ approvalWorkflow:[{stage:"Reconciliation",actor:"Cashier"},{stage:"Checklist Review",actor:"Branch Supervisor"},{stage:"Premises Security",actor:"Security"}],
+ relatedForms:[{name:"Branch Closing Checklist",type:"Form"}],
+ relatedSops:["BRN-OPN-001","FIN-CSH-001"],
+ versionHistory:[{version:"1.0",date:"2023-06-01",change:"Initial release",updatedBy:"Rania Adly"}],
+ keywords:["branch","closing","checklist","cash"]},
+
+{id:"CS-CMP-001",code:"CS-CMP-001",dept:"customerservice",category:"complaints",
+ title:S("Customer Complaint Handling SOP","التعامل مع شكاوى العملاء"),
+ purpose:S("Ensure customer complaints are logged, investigated and resolved within defined timelines.","ضمان تسجيل شكاوى العملاء والتحقيق فيها وحلها ضمن المواعيد المحددة."),
+ scope:S("Applies to all customer complaints received through any channel.","تنطبق على جميع شكاوى العملاء المستلمة عبر أي قناة اتصال."),
+ version:"1.0",effectiveDate:"2024-03-19",lastUpdated:"2026-05-28",responsiblePerson:"Dina Kamal – Customer Service Manager",status:"active",
+ responsibilities:[{role:"Customer Service Agent",task:"Logs and acknowledges the complaint"},{role:"Department Concerned",task:"Investigates root cause"},{role:"Customer Service Manager",task:"Approves final resolution"}],
+ requiredDocs:["Complaint Log Form","Root Cause Analysis Sheet"],
+ procedure:["Agent logs the complaint with full customer and issue details.","Customer receives an acknowledgment within 24 hours.","Complaint is routed to the department concerned for investigation.","Root cause is identified and a resolution is proposed.","Customer service manager approves the resolution.","Customer is informed of the resolution and outcome.","Complaint is closed and logged for trend analysis."],
+ approvalWorkflow:[{stage:"Logging",actor:"Customer Service Agent"},{stage:"Investigation",actor:"Department Concerned"},{stage:"Resolution Approval",actor:"Customer Service Manager"}],
+ relatedForms:[{name:"Complaint Log Form",type:"Form"}],
+ relatedSops:["CS-RET-001"],
+ versionHistory:[{version:"1.0",date:"2024-03-19",change:"Initial release",updatedBy:"Dina Kamal"}],
+ keywords:["complaint","resolution","customer service"]},
+
+{id:"CS-RET-001",code:"CS-RET-001",dept:"customerservice",category:"returns",
+ title:S("Product Return & Refund SOP","إرجاع المنتجات واسترداد الأموال"),
+ purpose:S("Standardize the handling of product returns and refund requests.","توحيد إجراءات التعامل مع طلبات إرجاع المنتجات واسترداد الأموال."),
+ scope:S("Applies to eligible product returns within the defined return policy period.","تنطبق على مرتجعات المنتجات المؤهلة ضمن فترة سياسة الإرجاع المحددة."),
+ version:"1.0",effectiveDate:"2024-07-07",lastUpdated:"2024-07-07",responsiblePerson:"Dina Kamal – Customer Service Manager",status:"draft",
+ responsibilities:[{role:"Customer Service Agent",task:"Verifies return eligibility"},{role:"Warehouse",task:"Inspects the returned item"},{role:"Finance",task:"Processes the refund"}],
+ requiredDocs:["Return Request Form","Inspection Report","Refund Approval Form"],
+ procedure:["Customer submits a return request with proof of purchase.","Agent verifies eligibility against the return policy.","Item is collected and sent to the warehouse for inspection.","Warehouse confirms item condition and completes the inspection report.","Finance processes the refund or replacement once approved.","Customer is notified of the outcome and refund timeline."],
+ approvalWorkflow:[{stage:"Eligibility Check",actor:"Customer Service Agent"},{stage:"Inspection",actor:"Warehouse"},{stage:"Refund Processing",actor:"Finance"}],
+ relatedForms:[{name:"Return Request Form",type:"Form"}],
+ relatedSops:["CS-CMP-001"],
+ versionHistory:[{version:"1.0",date:"2024-07-07",change:"Initial release",updatedBy:"Dina Kamal"}],
+ keywords:["return","refund","inspection"]},
+
+{id:"ADM-DOC-001",code:"ADM-DOC-001",dept:"administration",category:"doccontrol",
+ title:S("Document Control SOP","ضبط الوثائق"),
+ purpose:S("Ensure company documents are created, reviewed, approved and stored in a controlled manner.","ضمان إعداد ومراجعة واعتماد وحفظ وثائق الشركة بطريقة منضبطة."),
+ scope:S("Applies to all controlled documents including SOPs, policies and forms.","تنطبق على جميع الوثائق المنضبطة بما فيها إجراءات التشغيل القياسية والسياسات والنماذج."),
+ version:"1.0",effectiveDate:"2023-05-20",lastUpdated:"2026-07-01",responsiblePerson:"Yara Nabil – Administration Manager",status:"active",
+ responsibilities:[{role:"Document Owner",task:"Drafts and updates the document"},{role:"Department Head",task:"Reviews content accuracy"},{role:"Administration Manager",task:"Approves and publishes the final version"}],
+ requiredDocs:["Document Control Register","Document Template","Review & Approval Form"],
+ procedure:["Document owner drafts or revises the document.","Department head reviews the content for accuracy.","Document is submitted to Administration for formatting and control numbering.","Administration manager approves the final version.","Approved document is published and the register is updated.","Superseded versions are archived, not deleted."],
+ approvalWorkflow:[{stage:"Drafting",actor:"Document Owner"},{stage:"Content Review",actor:"Department Head"},{stage:"Final Approval",actor:"Administration Manager"}],
+ relatedForms:[{name:"Document Control Register",type:"Document"}],
+ relatedSops:["ADM-TRV-001"],
+ versionHistory:[{version:"1.0",date:"2023-05-20",change:"Initial release",updatedBy:"Yara Nabil"}],
+ keywords:["document control","SOP","approval","version"]},
+
+{id:"ADM-TRV-001",code:"ADM-TRV-001",dept:"administration",category:"travel",
+ title:S("Business Travel Request SOP","طلب السفر لأداء العمل"),
+ purpose:S("Ensure business travel is approved in advance and expenses are properly reimbursed.","ضمان اعتماد رحلات العمل مسبقاً وسداد المصروفات بشكل صحيح."),
+ scope:S("Applies to all employees requesting domestic or international business travel.","تنطبق على جميع الموظفين الذين يطلبون سفراً محلياً أو دولياً لأداء العمل."),
+ version:"1.0",effectiveDate:"2024-09-09",lastUpdated:"2025-04-12",responsiblePerson:"Yara Nabil – Administration Manager",status:"active",
+ responsibilities:[{role:"Employee",task:"Submits the travel request with justification"},{role:"Direct Manager",task:"Approves the travel purpose and budget"},{role:"Administration",task:"Books travel and accommodation"}],
+ requiredDocs:["Travel Request Form","Expense Claim Form","Travel Itinerary"],
+ procedure:["Employee submits the travel request with purpose and estimated cost.","Direct manager approves the request and budget.","Administration books travel and accommodation.","Employee travels and retains all expense receipts.","Expense claim form is submitted within 5 working days of return.","Finance reviews and reimburses approved expenses."],
+ approvalWorkflow:[{stage:"Request",actor:"Employee"},{stage:"Manager Approval",actor:"Direct Manager"},{stage:"Booking",actor:"Administration"}],
+ relatedForms:[{name:"Travel Request Form",type:"Form"},{name:"Expense Claim Form",type:"Form"}],
+ relatedSops:["ADM-DOC-001"],
+ versionHistory:[{version:"1.0",date:"2024-09-09",change:"Initial release",updatedBy:"Yara Nabil"}],
+ keywords:["travel","expenses","reimbursement"]}
+];
+
+/* ---------------------------- STATE ---------------------------- */
+let DEPARTMENTS = JSON.parse(JSON.stringify(DEPARTMENTS_DEFAULT));
+let SOPS = JSON.parse(JSON.stringify(SOPS_DEFAULT));
+let LANG = "en";
+let ROLE = "admin"; // admin | manager | employee (demo switcher)
+let FAVORITES = [];
+let VIEW_COUNTS = {};
+let STORAGE_OK = true;
+let notifOpen = false;
+let sidebarOpen = false;
+
+function t(key){ return (I18N[LANG] && I18N[LANG][key]) || I18N.en[key] || key; }
+function tf(field){ if(!field) return ""; return field[LANG] || field.en || ""; }
+function dir(){ return LANG === "ar" ? "rtl" : "ltr"; }
+
+/* ---------------------------- PERSISTENCE ---------------------------- */
+/* Detect which storage backend is actually usable in this environment:
+   - Inside Claude.ai's artifact viewer, window.storage exists and is shared across sessions.
+   - When the file is opened directly in a normal browser (double-clicked, hosted on your own
+     server/intranet), window.storage does not exist — we fall back to the browser's localStorage
+     so edits still survive closing and reopening on THAT SAME browser/device. */
+const STORAGE_BACKEND = (typeof window.storage === "object" && window.storage && typeof window.storage.set === "function") ? "artifact" : "local";
+
+async function safeGet(key, shared){
+  if(STORAGE_BACKEND === "artifact"){
+    try{ const r = await window.storage.get(key, !!shared); return r ? r.value : null; }
+    catch(e){ return null; }
+  }
+  try{ return localStorage.getItem("az-sop:"+key); }
+  catch(e){ return null; }
+}
+async function safeSet(key, value, shared){
+  if(STORAGE_BACKEND === "artifact"){
+    try{ const r = await window.storage.set(key, value, !!shared); return !!r; }
+    catch(e){ return false; }
+  }
+  try{ localStorage.setItem("az-sop:"+key, value); return true; }
+  catch(e){ return false; }
+}
+
+async function loadAll(){
+  try{
+    const lang = await safeGet("az-sop-lang", false);
+    if(lang === "en" || lang === "ar") LANG = lang;
+    const role = await safeGet("az-sop-role", false);
+    if(role) ROLE = role;
+    const favs = await safeGet("az-sop-favorites", false);
+    if(favs){ try{ FAVORITES = JSON.parse(favs); }catch(e){} }
+    const vc = await safeGet("az-sop-viewcounts", false);
+    if(vc){ try{ VIEW_COUNTS = JSON.parse(vc); }catch(e){} }
+    const data = await safeGet("az-sop-appdata", true);
+    if(data){
+      try{
+        const parsed = JSON.parse(data);
+        if(parsed.departments) DEPARTMENTS = parsed.departments;
+        if(parsed.sops) SOPS = parsed.sops;
+      }catch(e){}
+    }
+  }catch(e){ STORAGE_OK = false; }
+}
+
+async function persistData(showToast){
+  const ok = await safeSet("az-sop-appdata", JSON.stringify({departments:DEPARTMENTS, sops:SOPS}), true);
+  if(showToast) toast(ok ? t("saved") : t("errorSaving"), ok);
+  return ok;
+}
+async function persistFavorites(){ await safeSet("az-sop-favorites", JSON.stringify(FAVORITES), false); }
+async function persistViewCounts(){ await safeSet("az-sop-viewcounts", JSON.stringify(VIEW_COUNTS), false); }
+async function persistLang(){ await safeSet("az-sop-lang", LANG, false); }
+async function persistRole(){ await safeSet("az-sop-role", ROLE, false); }
+
+/* ---------------------------- UTILS ---------------------------- */
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function getDept(id){ return DEPARTMENTS.find(d=>d.id===id); }
+function getSop(id){ return SOPS.find(s=>s.id===id); }
+function getCat(dept, catId){ return dept ? dept.categories.find(c=>c.id===catId) : null; }
+function sopsForDept(deptId){ return SOPS.filter(s=>s.dept===deptId); }
+function formatDate(iso){
+  if(!iso) return "—";
+  const d = new Date(iso+"T00:00:00");
+  if(isNaN(d)) return iso;
+  const locale = LANG==="ar" ? "ar-EG" : "en-GB";
+  return d.toLocaleDateString(locale, {year:"numeric",month:"short",day:"2-digit"});
+}
+function statusPill(status){
+  const map = {active:"statusActive",draft:"statusDraft",archived:"statusArchived"};
+  return `<span class="status-pill status-${status}"><span class="dotpip"></span>${t(map[status]||"statusActive")}</span>`;
+}
+function monoBadge(dept){ return `<div class="mono-badge" style="--dcolor:${dept.color}">${esc(dept.mono)}</div>`; }
+function viewCountOf(sopId){ return VIEW_COUNTS[sopId] || Math.floor(20 + (sopId.charCodeAt(4)||50)); }
+function isFav(sopId){ return FAVORITES.includes(sopId); }
+
+function toast(msg, ok){
+  const root = document.getElementById("toast-root");
+  const div = document.createElement("div");
+  div.className = "toast";
+  div.innerHTML = `<span>${ok===false?"⚠":"✓"}</span><span>${esc(msg)}</span>`;
+  root.appendChild(div);
+  setTimeout(()=>{ div.style.transition="opacity .3s"; div.style.opacity="0"; setTimeout(()=>div.remove(),300); }, 2400);
+}
+
+function searchIndex(q){
+  q = (q||"").trim().toLowerCase();
+  if(!q) return [];
+  return SOPS.filter(s=>{
+    const dept = getDept(s.dept);
+    const cat = getCat(dept, s.category);
+    const hay = [
+      tf(s.title), s.code, dept?tf(dept.name):"", cat?tf(cat.name):"",
+      (s.keywords||[]).join(" "), tf(s.purpose), tf(s.scope)
+    ].join(" ").toLowerCase();
+    return hay.includes(q);
+  });
+}
+
+function computeStats(){
+  return {
+    total: SOPS.length,
+    depts: DEPARTMENTS.length,
+    active: SOPS.filter(s=>s.status==="active").length,
+    draft: SOPS.filter(s=>s.status==="draft").length,
+    archived: SOPS.filter(s=>s.status==="archived").length
+  };
+}
+function recentlyAdded(n){ return [...SOPS].sort((a,b)=> new Date(b.effectiveDate)-new Date(a.effectiveDate)).slice(0,n||5); }
+function recentlyUpdatedList(n){ return [...SOPS].sort((a,b)=> new Date(b.lastUpdated)-new Date(a.lastUpdated)).slice(0,n||5); }
+function mostUsed(n){ return [...SOPS].sort((a,b)=> viewCountOf(b.id)-viewCountOf(a.id)).slice(0,n||5); }
+
+
+/* ---------------------------- ROUTER ---------------------------- */
+function parseRoute(){
+  const hash = location.hash.replace(/^#\/?/, "");
+  const parts = hash.split("/").filter(Boolean);
+  return parts;
+}
+function go(path){ location.hash = "#/" + path; }
+
+function route(){
+  const parts = parseRoute();
+  sidebarOpen = false;
+  document.getElementById("sidebar").classList.remove("open");
+  if(parts.length === 0 || parts[0] === "dashboard") return renderDashboard();
+  if(parts[0] === "department" && parts[1]) return renderDepartmentPage(parts[1], parts[2]);
+  if(parts[0] === "sop" && parts[1]) return renderSopDetail(parts[1]);
+  if(parts[0] === "all-sops") return renderAllSops();
+  if(parts[0] === "recent") return renderRecentPage();
+  if(parts[0] === "favorites") return renderFavoritesPage();
+  if(parts[0] === "search") return renderSearchPage(decodeURIComponent(parts[1]||""));
+  if(parts[0] === "admin") return renderAdmin(parts[1]||"departments");
+  return renderDashboard();
+}
+window.addEventListener("hashchange", route);
+
+/* ---------------------------- SHELL: SIDEBAR / TOPBAR ---------------------------- */
+function currentSection(){
+  const parts = parseRoute();
+  return parts[0] || "dashboard";
+}
+function renderSidebar(){
+  const sec = currentSection();
+  const parts = parseRoute();
+  const activeDept = sec === "department" ? parts[1] : null;
+  const icon = {
+    dashboard:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>',
+    departments:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/></svg>',
+    allsops:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l5 5v13H6z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>',
+    recent:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
+    fav:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 17.3l-6.16 3.6 1.64-6.9L2 9.24l7.06-.6L12 2l2.94 6.64 7.06.6-5.48 4.76 1.64 6.9z"/></svg>',
+    search:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+    admin:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a7.97 7.97 0 000-6l1.8-1.4-2-3.4-2.1.8a8 8 0 00-2.1-1.2L14.6 1H9.4l-.4 2.8a8 8 0 00-2.1 1.2l-2.1-.8-2 3.4L4.6 9a7.97 7.97 0 000 6l-1.8 1.4 2 3.4 2.1-.8a8 8 0 002.1 1.2l.4 2.8h5.2l.4-2.8a8 8 0 002.1-1.2l2.1.8 2-3.4z"/></svg>'
+  };
+  const stats = computeStats();
+  const deptLinks = DEPARTMENTS.map(d=>{
+    const n = sopsForDept(d.id).length;
+    return `<a class="dept-mini-link ${activeDept===d.id?'active':''}" href="#/department/${d.id}">
+      <span class="dept-dot" style="background:${d.color}"></span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(tf(d.name))}</span>
+      <span style="font-family:var(--font-mono);font-size:10.5px;color:#7C8CA5;">${n}</span>
+    </a>`;
+  }).join("");
+  const html = `
+    <div class="brand">
+      <div class="brand-mark">AZ</div>
+      <div class="brand-text"><div class="b1">${esc(t("appName"))}</div><div class="b2">${esc(t("appSub"))}</div></div>
+    </div>
+    <nav class="side-nav">
+      <a class="side-link ${sec==='dashboard'?'active':''}" href="#/dashboard">${icon.dashboard}<span>${esc(t("navDashboard"))}</span></a>
+      <a class="side-link ${sec==='allsops'?'active':''}" href="#/all-sops">${icon.allsops}<span>${esc(t("navAllSops"))}</span><span class="count">${stats.total}</span></a>
+      <a class="side-link ${sec==='recent'?'active':''}" href="#/recent">${icon.recent}<span>${esc(t("navRecent"))}</span></a>
+      <a class="side-link ${sec==='favorites'?'active':''}" href="#/favorites">${icon.fav}<span>${esc(t("navFavorites"))}</span><span class="count">${FAVORITES.length||''}</span></a>
+      <a class="side-link ${sec==='search'?'active':''}" href="#/search">${icon.search}<span>${esc(t("navSearch"))}</span></a>
+      <div class="side-section-label">${esc(t("navDepartments"))}</div>
+      <div class="dept-mini-list">${deptLinks}</div>
+      <div class="side-section-label">&nbsp;</div>
+      <a class="side-link ${sec==='admin'?'active':''}" href="#/admin/departments">${icon.admin}<span>${esc(t("navAdmin"))}</span></a>
+    </nav>
+    <div class="sidebar-foot">${esc(t("companyTag"))} · v2.0<br><span style="opacity:.8;">${STORAGE_BACKEND==='local' ? '💾 '+esc(t('storageLocalNote')) : '☁ '+esc(t('storageSharedNote'))}</span></div>
+  `;
+  document.getElementById("sidebar").innerHTML = html;
+}
+
+function renderTopbar(){
+  const html = `
+    <button id="hamburger" onclick="toggleSidebar()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <div class="search-wrap">
+      <svg class="sic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="topbar-search" type="text" placeholder="${esc(t('searchPlaceholder'))}" value="${esc(parseRoute()[0]==='search'?decodeURIComponent(parseRoute()[1]||''):'')}"
+        onkeydown="if(event.key==='Enter'){ go('search/'+encodeURIComponent(this.value)); }">
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="lang-switch">
+      <button class="${LANG==='en'?'active':''}" onclick="setLang('en')">EN</button>
+      <button class="${LANG==='ar'?'active':''}" onclick="setLang('ar')">AR</button>
+    </div>
+    <div class="role-switch" title="${esc(t('switchRole'))}">
+      <span>${esc(t('yourRole'))}</span>
+      <select onchange="setRole(this.value)">
+        <option value="admin" ${ROLE==='admin'?'selected':''}>${esc(t('roleAdmin'))}</option>
+        <option value="manager" ${ROLE==='manager'?'selected':''}>${esc(t('roleManager'))}</option>
+        <option value="employee" ${ROLE==='employee'?'selected':''}>${esc(t('roleEmployee'))}</option>
+      </select>
+    </div>
+    <button class="icon-btn" onclick="toggleNotif(event)">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+      ${recentlyUpdatedList(3).length? '<span class="dot"></span>' : ''}
+    </button>
+  `;
+  document.getElementById("topbar").innerHTML = html;
+}
+
+function toggleSidebar(){
+  sidebarOpen = !sidebarOpen;
+  document.getElementById("sidebar").classList.toggle("open", sidebarOpen);
+}
+
+function toggleNotif(ev){
+  ev.stopPropagation();
+  notifOpen = !notifOpen;
+  renderNotifPanel();
+}
+function renderNotifPanel(){
+  let panel = document.getElementById("notif-panel");
+  if(panel) panel.remove();
+  if(!notifOpen) return;
+  const items = recentlyUpdatedList(6);
+  const rows = items.length ? items.map(s=>{
+    const d = getDept(s.dept);
+    return `<div class="notif-item" style="cursor:pointer" onclick="go('sop/${s.id}')">
+      <div class="t">${esc(t('updated'))} — ${esc(tf(s.title))} · v${esc(s.version)}</div>
+      <div class="d">${esc(tf(d.name))} · ${formatDate(s.lastUpdated)}</div>
+    </div>`;
+  }).join("") : `<div class="notif-item">${esc(t('noNotifications'))}</div>`;
+  const div = document.createElement("div");
+  div.id = "notif-panel";
+  div.className = "notif-panel";
+  div.innerHTML = `<h4>${esc(t('notifications'))}</h4>${rows}`;
+  document.getElementById("overlay-root").appendChild(div);
+}
+document.addEventListener("click", (e)=>{
+  const panel = document.getElementById("notif-panel");
+  if(panel && !panel.contains(e.target) && !e.target.closest(".icon-btn")){ notifOpen=false; panel.remove(); }
+});
+
+async function setLang(l){ LANG = l; document.documentElement.setAttribute("dir", dir()); document.documentElement.setAttribute("lang", l); await persistLang(); renderShell(); route(); }
+async function setRole(r){ ROLE = r; await persistRole(); renderShell(); route(); }
+
+function breadcrumb(items){
+  const chev = LANG==='ar' ? '‹' : '›';
+  const parts = items.map((it,i)=>{
+    if(i===items.length-1) return `<span class="cur">${esc(it.label)}</span>`;
+    return `<a href="${it.href}">${esc(it.label)}</a>`;
+  });
+  return `<div class="breadcrumb">` + parts.join(`<span class="sep chev">${chev}</span>`) + `</div>`;
+}
+
+/* ---------------------------- DASHBOARD ---------------------------- */
+function renderDashboard(){
+  const stats = computeStats();
+  const view = document.getElementById("view");
+  const deptCards = DEPARTMENTS.map(d=>{
+    const n = sopsForDept(d.id).length;
+    return `<div class="dept-card" style="--dcolor:${d.color}">
+      <div class="dept-card-top">
+        ${monoBadge(d)}
+        <div>
+          <h4>${esc(tf(d.name))}</h4>
+          <div class="desc">${esc(tf(d.desc))}</div>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span class="count-badge">${n} ${esc(t('sopsCount'))}</span>
+        <a class="btn btn-ghost btn-sm" href="#/department/${d.id}">${esc(t('viewSops'))}</a>
+      </div>
+    </div>`;
+  }).join("");
+
+  const miniRow = (s)=>{
+    const d = getDept(s.dept);
+    return `<div class="mini-row" onclick="go('sop/${s.id}')" style="cursor:pointer;">
+      <div class="mchip" style="--dcolor:${d.color}"></div>
+      <div class="mbody">
+        <div class="mtitle">${esc(tf(s.title))}</div>
+        <div class="mmeta">${s.code} · ${esc(tf(d.name))}</div>
+      </div>
+      <div class="mright">${statusPill(s.status)}</div>
+      <button class="fav-star ${isFav(s.id)?'active':''}" onclick="event.stopPropagation();toggleFav('${s.id}')">★</button>
+    </div>`;
+  };
+
+  view.innerHTML = `
+    <div class="page-head">
+      <div><div class="page-title">${esc(t('appName'))} – ${esc(t('appSub'))}</div>
+      <div class="page-sub">${esc(t('companyTag'))}</div></div>
+    </div>
+    <div class="stats-strip">
+      <div class="stat-cell"><div class="stat-num">${stats.total}</div><div class="stat-lbl">${esc(t('totalSops'))}</div></div>
+      <div class="stat-cell"><div class="stat-num">${stats.depts}</div><div class="stat-lbl">${esc(t('totalDepts'))}</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--green)">${stats.active}</div><div class="stat-lbl">${esc(t('activeCount'))}</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--gold)">${stats.draft}</div><div class="stat-lbl">${esc(t('draftCount'))}</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--grey-status)">${stats.archived}</div><div class="stat-lbl">${esc(t('archivedCount'))}</div></div>
+    </div>
+
+    <div class="section-head"><h3>${esc(t('navDepartments'))}</h3></div>
+    <div class="dept-grid">${deptCards}</div>
+
+    <div class="section-head"><h3>${esc(t('recentlyAdded'))}</h3><a class="view-all" href="#/all-sops">${esc(t('viewAll'))}</a></div>
+    <div class="mini-list">${recentlyAdded(4).map(miniRow).join("")}</div>
+
+    <div class="section-head"><h3>${esc(t('recentlyUpdated'))}</h3><a class="view-all" href="#/recent">${esc(t('viewAll'))}</a></div>
+    <div class="mini-list">${recentlyUpdatedList(4).map(miniRow).join("")}</div>
+
+    <div class="section-head"><h3>${esc(t('mostUsed'))}</h3></div>
+    <div class="mini-list">${mostUsed(4).map(miniRow).join("")}</div>
+
+    <div class="section-head"><h3>${esc(t('quickAccess'))}</h3></div>
+    <div class="quick-grid">
+      <a class="quick-tile" href="#/favorites"><div class="qlabel">★ ${esc(t('navFavorites'))}</div><div class="qsub">${FAVORITES.length} ${esc(t('sopsCount'))}</div></a>
+      <a class="quick-tile" href="#/all-sops"><div class="qlabel">${esc(t('navAllSops'))}</div><div class="qsub">${stats.total} ${esc(t('sopsCount'))}</div></a>
+      <a class="quick-tile" href="#/admin/departments"><div class="qlabel">${esc(t('adminPanel'))}</div><div class="qsub">${esc(t('goToAdmin'))}</div></a>
+      <a class="quick-tile" href="#/recent"><div class="qlabel">${esc(t('navRecent'))}</div><div class="qsub">${recentlyUpdatedList(50).length} ${esc(t('sopsCount'))}</div></a>
+    </div>
+  `;
+}
+
+/* ---------------------------- SOP DOC CARD (shared) ---------------------------- */
+function sopDocCard(s){
+  const d = getDept(s.dept);
+  const cat = getCat(d, s.category);
+  return `<div class="sop-doc-card">
+    <div class="sdc-top">
+      <div>
+        <div class="sdc-code">${s.code}</div>
+        <h4>${esc(tf(s.title))}</h4>
+      </div>
+      <button class="fav-star ${isFav(s.id)?'active':''}" onclick="toggleFav('${s.id}')">★</button>
+    </div>
+    <div>${statusPill(s.status)}</div>
+    <div class="sdc-facts">
+      <div>${esc(t('department'))}: <b>${esc(tf(d.name))}</b></div>
+      <div>${esc(t('category'))}: <b>${esc(cat?tf(cat.name):'—')}</b></div>
+      <div>${esc(t('version'))}: <b>v${esc(s.version)}</b></div>
+      <div>${esc(t('lastUpdated'))}: <b>${formatDate(s.lastUpdated)}</b></div>
+    </div>
+    <div class="sdc-foot">
+      <span style="font-size:11.5px;color:var(--muted)">${esc(s.responsiblePerson)}</span>
+      <a class="btn btn-primary btn-sm" href="#/sop/${s.id}">${esc(t('viewSop'))}</a>
+    </div>
+  </div>`;
+}
+
+/* ---------------------------- DEPARTMENT PAGE ---------------------------- */
+function renderDepartmentPage(deptId, catId){
+  const d = getDept(deptId);
+  const view = document.getElementById("view");
+  if(!d){ view.innerHTML = emptyState(t('noResults'), ''); return; }
+  const all = sopsForDept(d.id);
+  const active = catId || "all";
+  const list = active==="all" ? all : all.filter(s=>s.category===active);
+
+  const tabs = [`<button class="cat-tab ${active==='all'?'active':''}" onclick="go('department/${d.id}')">${esc(t('allCategories'))}</button>`]
+    .concat(d.categories.map(c=>{
+      const n = all.filter(s=>s.category===c.id).length;
+      return `<button class="cat-tab ${active===c.id?'active':''}" onclick="go('department/${d.id}/${c.id}')">${esc(tf(c.name))} (${n})</button>`;
+    })).join("");
+
+  view.innerHTML = `
+    ${breadcrumb([{label:t('home'),href:'#/dashboard'},{label:tf(d.name),href:'#/department/'+d.id}])}
+    <div class="page-head">
+      <div style="display:flex;gap:14px;align-items:center;">
+        ${monoBadge(d)}
+        <div><div class="page-title">${esc(tf(d.name))}</div><div class="page-sub">${esc(tf(d.desc))}</div></div>
+      </div>
+      ${ROLE==='admin' ? `<a class="btn btn-amber" href="#/admin/sops">${esc(t('addSop'))}</a>` : ''}
+    </div>
+    <div class="cat-tabs">${tabs}</div>
+    ${list.length ? `<div class="sop-doc-grid">${list.map(sopDocCard).join("")}</div>` : emptyState(t('emptyDeptTitle'), t('emptyDeptSub'))}
+  `;
+}
+
+function emptyState(title, sub){
+  return `<div class="empty-state"><div class="es-title">${esc(title)}</div><div>${esc(sub||'')}</div></div>`;
+}
+
+/* ---------------------------- ALL SOPS / RECENT (shared filterable list) ---------------------------- */
+let FILTER_STATE = {dept:"", status:""};
+function renderAllSops(){ renderFilterablePage("all"); }
+function renderRecentPage(){ renderFilterablePage("recent"); }
+function setFilter(key, val){ FILTER_STATE[key] = val; renderFilterablePage(window._filterMode || "all"); }
+
+function renderFavoritesPage(){
+  const list = SOPS.filter(s=>isFav(s.id));
+  const view = document.getElementById("view");
+  view.innerHTML = `
+    ${breadcrumb([{label:t('home'),href:'#/dashboard'},{label:t('favoritesTitle'),href:'#/favorites'}])}
+    <div class="page-head"><div class="page-title">${esc(t('favoritesTitle'))}</div></div>
+    ${list.length ? `<div class="sop-doc-grid">${list.map(sopDocCard).join("")}</div>` : emptyState(t('favoritesEmpty'), t('favoritesEmptySub'))}
+  `;
+}
+
+function renderFilterablePage(mode){
+  window._filterMode = mode;
+  const view = document.getElementById("view");
+  const isRecent = mode === "recent";
+  const title = isRecent ? t('navRecent') : t('navAllSops');
+  const crumbs = [{label:t('home'),href:'#/dashboard'},{label:title,href: isRecent?'#/recent':'#/all-sops'}];
+  let list = isRecent ? recentlyUpdatedList(50) : [...SOPS];
+  if(FILTER_STATE.dept) list = list.filter(s=>s.dept===FILTER_STATE.dept);
+  if(FILTER_STATE.status) list = list.filter(s=>s.status===FILTER_STATE.status);
+  const deptOpts = DEPARTMENTS.map(d=>`<option value="${d.id}" ${FILTER_STATE.dept===d.id?'selected':''}>${esc(tf(d.name))}</option>`).join("");
+  view.innerHTML = `
+    ${breadcrumb(crumbs)}
+    <div class="page-head"><div class="page-title">${esc(title)}</div></div>
+    <div class="filters-bar">
+      <select onchange="setFilter('dept', this.value)">
+        <option value="">${esc(t('allDepartments'))}</option>${deptOpts}
+      </select>
+      <select onchange="setFilter('status', this.value)">
+        <option value="">${esc(t('allStatuses'))}</option>
+        <option value="active" ${FILTER_STATE.status==='active'?'selected':''}>${esc(t('statusActive'))}</option>
+        <option value="draft" ${FILTER_STATE.status==='draft'?'selected':''}>${esc(t('statusDraft'))}</option>
+        <option value="archived" ${FILTER_STATE.status==='archived'?'selected':''}>${esc(t('statusArchived'))}</option>
+      </select>
+      ${(FILTER_STATE.dept||FILTER_STATE.status) ? `<button class="btn btn-ghost btn-sm" onclick="FILTER_STATE={dept:'',status:''};renderFilterablePage('${mode}')">${esc(t('clearFilters'))}</button>` : ''}
+      <span class="result-count">${esc(t('showing'))} ${list.length}</span>
+    </div>
+    ${list.length ? `<div class="sop-doc-grid">${list.map(sopDocCard).join("")}</div>` : emptyState(t('noResults'), t('noResultsSub'))}
+  `;
+}
+
+/* ---------------------------- SEARCH ---------------------------- */
+function renderSearchPage(q){
+  const view = document.getElementById("view");
+  const results = q ? searchIndex(q) : [];
+  view.innerHTML = `
+    ${breadcrumb([{label:t('home'),href:'#/dashboard'},{label:t('navSearch'),href:'#/search'}])}
+    <div class="page-head"><div class="page-title">${esc(t('navSearch'))}</div></div>
+    <div class="search-wrap" style="max-width:640px;margin-bottom:18px;">
+      <svg class="sic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" value="${esc(q)}" placeholder="${esc(t('searchPlaceholderShort'))}" autofocus
+        onkeydown="if(event.key==='Enter'){ go('search/'+encodeURIComponent(this.value)); }">
+    </div>
+    ${q ? `<div class="result-count" style="margin-bottom:12px;">${esc(t('searchResultsFor'))}: "${esc(q)}" — ${results.length}</div>` : ''}
+    ${q ? (results.length ? `<div class="sop-doc-grid">${results.map(sopDocCard).join("")}</div>` : emptyState(t('noResults'), t('noResultsSub'))) : ''}
+  `;
+}
+
+/* ---------------------------- SOP DETAIL PAGE ---------------------------- */
+async function renderSopDetail(id){
+  const s = getSop(id);
+  const view = document.getElementById("view");
+  if(!s){ view.innerHTML = emptyState(t('noResults'),''); return; }
+  const d = getDept(s.dept);
+  const cat = getCat(d, s.category);
+
+  VIEW_COUNTS[id] = (VIEW_COUNTS[id]||viewCountOf(id)) + 1;
+  persistViewCounts();
+
+  const respRows = (s.responsibilities||[]).map(r=>`<tr><td>${esc(r.role)}</td><td>${esc(r.task)}</td></tr>`).join("");
+  const docsChips = (s.requiredDocs||[]).map(doc=>`<div class="doc-chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l5 5v13H6z"/><path d="M14 3v5h5"/></svg>${esc(doc)}</div>`).join("");
+  const steps = (s.procedure||[]).map(p=>`<li>${esc(p)}</li>`).join("");
+  const flow = (s.approvalWorkflow||[]).map((f,i,arr)=>`<div class="flow-node"><div class="fs">${esc(f.stage)}</div><div class="fa">${esc(f.actor)}</div></div>${i<arr.length-1?'<span class="flow-arrow">'+(LANG==='ar'?'←':'→')+'</span>':''}`).join("");
+  const forms = (s.relatedForms||[]).map(f=>{
+    if(f.dataUrl){
+      return `<div class="related-item">
+        <span class="rt">${esc(f.name)}</span>
+        <span style="display:flex;gap:8px;">
+          <a href="${f.dataUrl}" target="_blank" rel="noopener" class="rc" style="text-decoration:underline;">${esc(t('view'))}</a>
+          <a href="${f.dataUrl}" download="${esc(f.name)}.pdf" class="rc" style="text-decoration:underline;">${esc(t('download'))}</a>
+        </span>
+      </div>`;
+    }
+    return `<div class="related-item"><span class="rt">${esc(f.name)}</span><span class="rc">${esc(t(f.type==='Form'?'form':'document'))}</span></div>`;
+  }).join("") || `<div style="color:var(--muted);font-size:12.6px;">—</div>`;
+  const relSops = (s.relatedSops||[]).map(rid=>{
+    const rs = getSop(rid); if(!rs) return "";
+    return `<div class="related-item" style="cursor:pointer" onclick="go('sop/${rs.id}')"><span class="rt">${esc(tf(rs.title))}</span><span class="rc">${rs.code}</span></div>`;
+  }).join("") || `<div style="color:var(--muted);font-size:12.6px;">—</div>`;
+  const vh = (s.versionHistory||[]).map(v=>`<tr><td class="vnum">v${esc(v.version)}</td><td>${formatDate(v.date)}</td><td>${esc(v.change)}</td><td>${esc(v.updatedBy)}</td></tr>`).join("");
+
+  const canEdit = ROLE === "admin";
+
+  view.innerHTML = `
+    ${breadcrumb([
+      {label:t('home'),href:'#/dashboard'},
+      {label:tf(d.name),href:'#/department/'+d.id},
+      {label:cat?tf(cat.name):'',href:'#/department/'+d.id+'/'+s.category},
+      {label:tf(s.title),href:'#'}
+    ])}
+    <div class="sop-header">
+      <div class="sop-header-top">
+        <div>
+          <div class="code-line">${s.code}</div>
+          <h1>${esc(tf(s.title))}</h1>
+        </div>
+        <div class="sop-header-actions">
+          <button class="btn btn-ghost" onclick="toggleFav('${s.id}')" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#fff;">
+            ${isFav(s.id) ? '★ '+esc(t('removeFromFavorites')) : '☆ '+esc(t('addToFavorites'))}
+          </button>
+          ${canEdit ? `<button class="btn btn-amber" onclick="openSopModal('${s.id}')">${esc(t('edit'))}</button>` : ''}
+        </div>
+      </div>
+      <div class="sop-meta-grid">
+        <div><div class="mk">${esc(t('department'))}</div><div class="mv">${esc(tf(d.name))}</div></div>
+        <div><div class="mk">${esc(t('version'))}</div><div class="mv">v${esc(s.version)}</div></div>
+        <div><div class="mk">${esc(t('effectiveDate'))}</div><div class="mv">${formatDate(s.effectiveDate)}</div></div>
+        <div><div class="mk">${esc(t('lastUpdated'))}</div><div class="mv">${formatDate(s.lastUpdated)}</div></div>
+        <div><div class="mk">${esc(t('approvalStatus'))}</div><div class="mv">${statusPill(s.status)}</div></div>
+      </div>
+    </div>
+
+    <div class="doc-layout">
+      <div class="doc-main">
+        <div class="doc-section">
+          <h3><span class="num">01</span> ${esc(t('purpose'))}</h3>
+          <p>${esc(tf(s.purpose))}</p>
+        </div>
+        <div class="doc-section">
+          <h3><span class="num">02</span> ${esc(t('scope'))}</h3>
+          <p>${esc(tf(s.scope))}</p>
+        </div>
+        <div class="doc-section">
+          <h3><span class="num">03</span> ${esc(t('responsibilities'))}</h3>
+          <table class="resp-table"><tbody>${respRows}</tbody></table>
+        </div>
+        <div class="doc-section">
+          <h3><span class="num">04</span> ${esc(t('requiredDocs'))}</h3>
+          <div class="doc-chip-list">${docsChips}</div>
+        </div>
+        <div class="doc-section">
+          <h3><span class="num">05</span> ${esc(t('procedure'))}</h3>
+          <ol class="step-list">${steps}</ol>
+          <p style="margin-top:12px;font-size:11.8px;color:var(--muted-2);">${LANG==='ar'?esc(t('contentNote')):''}</p>
+        </div>
+        <div class="doc-section">
+          <h3><span class="num">06</span> ${esc(t('approvalWorkflow'))}</h3>
+          <div class="flow-track">${flow}</div>
+        </div>
+        <div class="doc-section">
+          <h3><span class="num">07</span> ${esc(t('versionHistory'))}</h3>
+          <table class="vh-table">
+            <thead><tr><th>${esc(t('version_'))}</th><th>${esc(t('effectiveDate'))}</th><th>${esc(t('change'))}</th><th>${esc(t('updatedByLbl'))}</th></tr></thead>
+            <tbody>${vh}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="doc-side">
+        <div class="side-card">
+          <h4>${esc(t('responsiblePerson'))}</h4>
+          <div style="font-size:13.4px;font-weight:600;">${esc(s.responsiblePerson)}</div>
+        </div>
+        <div class="side-card">
+          <h4>${esc(t('relatedForms'))}</h4>
+          <div class="related-list">${forms}</div>
+        </div>
+        <div class="side-card">
+          <h4>${esc(t('relatedSops'))}</h4>
+          <div class="related-list">${relSops}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------------------------- FAVORITES ---------------------------- */
+async function toggleFav(id){
+  if(isFav(id)) FAVORITES = FAVORITES.filter(x=>x!==id);
+  else FAVORITES.push(id);
+  await persistFavorites();
+  route();
+}
+
+/* ---------------------------- ADMIN PANEL ---------------------------- */
+function renderAdmin(tab){
+  if(ROLE !== "admin"){
+    document.getElementById("view").innerHTML = `
+      ${breadcrumb([{label:t('home'),href:'#/dashboard'},{label:t('adminPanel'),href:'#/admin/departments'}])}
+      ${emptyState(t('adminOnlyNote'), '')}
+    `;
+    return;
+  }
+  const view = document.getElementById("view");
+  const isDept = tab !== "sops";
+  const deptRows = DEPARTMENTS.map((d,i)=>`
+    <tr>
+      <td><span class="dept-dot" style="display:inline-block;background:${d.color};width:9px;height:9px;border-radius:2px;margin-right:6px;"></span>${esc(tf(d.name))}</td>
+      <td style="color:var(--muted);max-width:280px;">${esc(tf(d.desc))}</td>
+      <td style="font-family:var(--font-mono);">${sopsForDept(d.id).length}</td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-mini-btn" title="${esc(t('reorderUp'))}" onclick="moveDept(${i},-1)">↑</button>
+          <button class="icon-mini-btn" title="${esc(t('reorderDown'))}" onclick="moveDept(${i},1)">↓</button>
+          <button class="icon-mini-btn" onclick="openDeptModal('${d.id}')">✎</button>
+          <button class="icon-mini-btn danger" onclick="deleteDept('${d.id}')">✕</button>
+        </div>
+      </td>
+    </tr>`).join("");
+
+  const sopRows = SOPS.map(s=>{
+    const d = getDept(s.dept);
+    return `<tr>
+      <td style="font-family:var(--font-mono);font-size:12px;">${s.code}</td>
+      <td>${esc(tf(s.title))}</td>
+      <td>${esc(tf(d?d.name:{en:'—',ar:'—'}))}</td>
+      <td>${statusPill(s.status)}</td>
+      <td>v${esc(s.version)}</td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-mini-btn" onclick="openSopModal('${s.id}')">✎</button>
+          <button class="icon-mini-btn" onclick="cycleStatus('${s.id}')" title="${esc(t('archive'))}">⤴</button>
+          <button class="icon-mini-btn danger" onclick="deleteSop('${s.id}')">✕</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+
+  view.innerHTML = `
+    ${breadcrumb([{label:t('home'),href:'#/dashboard'},{label:t('adminPanel'),href:'#/admin/departments'}])}
+    <div class="page-head">
+      <div class="page-title">${esc(t('adminPanel'))}</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="exportBackup()">⬇ ${esc(t('exportBackup'))}</button>
+        <label class="btn btn-ghost btn-sm" style="cursor:pointer;margin:0;">
+          ⬆ ${esc(t('importBackup'))}
+          <input type="file" accept="application/json" style="display:none;" onchange="importBackup(this.files[0])">
+        </label>
+      </div>
+    </div>
+    <div class="page-sub" style="margin:-10px 0 16px 0;">${esc(t('backupHint'))}</div>
+    <div class="admin-tabs">
+      <a class="admin-tab ${isDept?'active':''}" href="#/admin/departments">${esc(t('adminDepartments'))}</a>
+      <a class="admin-tab ${!isDept?'active':''}" href="#/admin/sops">${esc(t('adminSops'))}</a>
+    </div>
+    ${isDept ? `
+      <div class="page-head" style="margin-bottom:10px;"><span></span><button class="btn btn-amber" onclick="openDeptModal()">${esc(t('addDepartment'))}</button></div>
+      <table class="admin-table">
+        <thead><tr><th>${esc(t('name'))}</th><th>${esc(t('description'))}</th><th>${esc(t('numSops'))}</th><th style="text-align:right;">${esc(t('actions'))}</th></tr></thead>
+        <tbody>${deptRows}</tbody>
+      </table>
+    ` : `
+      <div class="page-head" style="margin-bottom:10px;"><span></span><button class="btn btn-amber" onclick="openSopModal()">${esc(t('addSop'))}</button></div>
+      <table class="admin-table">
+        <thead><tr><th>${esc(t('code'))}</th><th>${esc(t('titleField'))}</th><th>${esc(t('department'))}</th><th>${esc(t('status'))}</th><th>${esc(t('version'))}</th><th style="text-align:right;">${esc(t('actions'))}</th></tr></thead>
+        <tbody>${sopRows}</tbody>
+      </table>
+    `}
+  `;
+}
+
+/* ---------------------------- BACKUP: EXPORT / IMPORT ---------------------------- */
+function exportBackup(){
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    source: "AZ Global SOP Portal",
+    departments: DEPARTMENTS,
+    sops: SOPS
+  };
+  const json = JSON.stringify(payload, null, 2);
+  const a = document.createElement("a");
+  a.href = "data:application/json;charset=utf-8," + encodeURIComponent(json);
+  a.download = "az-sop-portal-backup-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  toast(t('saved'), true);
+}
+function importBackup(file){
+  if(!file) return;
+  if(!confirm(t('confirmImport'))) return;
+  const reader = new FileReader();
+  reader.onload = async (e)=>{
+    try{
+      const parsed = JSON.parse(e.target.result);
+      if(!parsed.departments || !parsed.sops) throw new Error("shape");
+      DEPARTMENTS = parsed.departments;
+      SOPS = parsed.sops;
+      await persistData(false);
+      toast(t('importSuccess'), true);
+      renderShell();
+      route();
+    }catch(err){
+      toast(t('importError'), false);
+    }
+  };
+  reader.readAsText(file);
+}
+
+
+async function moveDept(i, dir){
+  const j = i+dir;
+  if(j<0 || j>=DEPARTMENTS.length) return;
+  const tmp = DEPARTMENTS[i]; DEPARTMENTS[i]=DEPARTMENTS[j]; DEPARTMENTS[j]=tmp;
+  await persistData(true);
+  renderAdmin("departments");
+}
+async function deleteDept(id){
+  if(!confirm(t('confirmDelete'))) return;
+  DEPARTMENTS = DEPARTMENTS.filter(d=>d.id!==id);
+  SOPS = SOPS.filter(s=>s.dept!==id);
+  await persistData(true);
+  renderShell(); renderAdmin("departments");
+}
+async function deleteSop(id){
+  if(!confirm(t('confirmDelete'))) return;
+  SOPS = SOPS.filter(s=>s.id!==id);
+  await persistData(true);
+  renderShell(); renderAdmin("sops");
+}
+async function cycleStatus(id){
+  const s = getSop(id); if(!s) return;
+  const order = ["active","draft","archived"];
+  s.status = order[(order.indexOf(s.status)+1)%order.length];
+  await persistData(true);
+  renderAdmin("sops");
+}
+
+/* ---------------------------- DEPARTMENT MODAL ---------------------------- */
+function openDeptModal(id){
+  const editing = !!id;
+  const d = editing ? getDept(id) : {id:"",color:"#3B6E8F",mono:"NW",name:{en:"",ar:""},desc:{en:"",ar:""},categories:[]};
+  const catsHtml = (d.categories||[]).map((c,i)=>`
+    <div class="list-editor-row" data-cat-row>
+      <input type="text" value="${esc(c.name.en)}" placeholder="${esc(t('name'))}" data-cat-en>
+      <input type="text" value="${esc(c.name.ar)}" placeholder="${esc(t('nameAr'))}" data-cat-ar dir="rtl">
+      <button class="remove-row-btn" onclick="this.closest('[data-cat-row]').remove()">✕</button>
+    </div>`).join("");
+
+  const html = `
+    <div class="modal-overlay" onclick="handleOverlayClick(event, this)">
+      <div class="modal-box">
+        <h3>${editing ? esc(t('editDeptModal')) : esc(t('newDeptModal'))}</h3>
+        <div class="form-grid">
+          <div class="form-field"><label>${esc(t('name'))} (EN)</label><input id="f-name-en" type="text" value="${esc(d.name.en)}"></div>
+          <div class="form-field"><label>${esc(t('nameAr'))}</label><input id="f-name-ar" type="text" value="${esc(d.name.ar)}" dir="rtl"></div>
+          <div class="form-field full"><label>${esc(t('description'))} (EN)</label><textarea id="f-desc-en">${esc(d.desc.en)}</textarea></div>
+          <div class="form-field full"><label>${esc(t('descAr'))}</label><textarea id="f-desc-ar" dir="rtl">${esc(d.desc.ar)}</textarea></div>
+          <div class="form-field"><label>${esc(t('colorLabel'))}</label><input id="f-color" type="color" value="${d.color}" style="height:38px;"></div>
+          <div class="form-field"><label>${esc(t('monoLabel'))}</label><input id="f-mono" type="text" maxlength="4" value="${esc(d.mono)}"></div>
+          <div class="form-field full">
+            <label>${esc(t('navDepartments'))} · ${esc(t('addCategory'))}</label>
+            <div class="list-editor" id="cat-editor">${catsHtml}</div>
+            <button class="add-row-btn" onclick="addCatRow()">+ ${esc(t('addCategory'))}</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" onclick="closeModal()">${esc(t('cancel'))}</button>
+          <button class="btn btn-primary" onclick="saveDept('${editing?d.id:''}')">${esc(t('save'))}</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById("overlay-root").innerHTML = html;
+  modalOpenedAt = Date.now();
+}
+function addCatRow(){
+  const wrap = document.getElementById("cat-editor");
+  const row = document.createElement("div");
+  row.className = "list-editor-row"; row.setAttribute("data-cat-row","");
+  row.innerHTML = `<input type="text" placeholder="${esc(t('name'))}" data-cat-en><input type="text" placeholder="${esc(t('nameAr'))}" data-cat-ar dir="rtl"><button class="remove-row-btn" onclick="this.closest('[data-cat-row]').remove()">✕</button>`;
+  wrap.appendChild(row);
+}
+function closeModal(){ document.getElementById("overlay-root").innerHTML = ""; }
+let modalOpenedAt = 0;
+function handleOverlayClick(e, el){
+  if(e.target !== el) return;
+  if(Date.now() - modalOpenedAt < 400) return; // ignore mobile "ghost click" firing right after the tap that opened the modal
+  closeModal();
+}
+
+async function saveDept(existingId){
+  const nameEn = document.getElementById("f-name-en").value.trim();
+  const nameAr = document.getElementById("f-name-ar").value.trim();
+  if(!nameEn){ toast(t('fieldRequired'), false); return; }
+  const rows = document.querySelectorAll("#cat-editor [data-cat-row]");
+  const categories = Array.from(rows).map((r,i)=>{
+    const en = r.querySelector("[data-cat-en]").value.trim();
+    const ar = r.querySelector("[data-cat-ar]").value.trim();
+    return en ? {id: (en.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,24) || 'cat'+i), name:{en, ar: ar||en}} : null;
+  }).filter(Boolean);
+
+  const payload = {
+    id: existingId || (nameEn.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,24) || "dept"+Date.now()),
+    color: document.getElementById("f-color").value,
+    mono: (document.getElementById("f-mono").value || nameEn.slice(0,3)).toUpperCase(),
+    name:{en:nameEn, ar: nameAr||nameEn},
+    desc:{en:document.getElementById("f-desc-en").value.trim(), ar:document.getElementById("f-desc-ar").value.trim()},
+    categories: categories.length ? categories : (existingId ? getDept(existingId).categories : [])
+  };
+  if(existingId){
+    const idx = DEPARTMENTS.findIndex(d=>d.id===existingId);
+    DEPARTMENTS[idx] = payload;
+  } else {
+    DEPARTMENTS.push(payload);
+  }
+  await persistData(false);
+  closeModal();
+  toast(existingId ? t('updated') : t('added'), true);
+  renderShell(); renderAdmin("departments");
+}
+
+/* ---------------------------- SOP MODAL ---------------------------- */
+function openSopModal(id){
+  const editing = !!id;
+  const s = editing ? getSop(id) : {
+    id:"", code:"", dept:DEPARTMENTS[0].id, category: DEPARTMENTS[0].categories[0]?DEPARTMENTS[0].categories[0].id:"",
+    title:{en:"",ar:""}, purpose:{en:"",ar:""}, scope:{en:"",ar:""},
+    version:"1.0", effectiveDate:new Date().toISOString().slice(0,10), lastUpdated:new Date().toISOString().slice(0,10),
+    responsiblePerson:"", status:"draft",
+    responsibilities:[], requiredDocs:[], procedure:[], approvalWorkflow:[], relatedForms:[], relatedSops:[], versionHistory:[]
+  };
+  const deptOpts = DEPARTMENTS.map(d=>`<option value="${d.id}" ${s.dept===d.id?'selected':''}>${esc(tf(d.name))}</option>`).join("");
+  const curDept = getDept(s.dept) || DEPARTMENTS[0];
+  const catOptsFor = (dept)=> dept.categories.map(c=>`<option value="${c.id}" ${s.category===c.id?'selected':''}>${esc(tf(c.name))}</option>`).join("");
+
+  const html = `
+    <div class="modal-overlay" onclick="handleOverlayClick(event, this)">
+      <div class="modal-box" style="max-width:820px;">
+        <h3>${editing ? esc(t('editSopModal')) : esc(t('newSopModal'))}</h3>
+        <div class="form-grid">
+          <div class="form-field"><label>${esc(t('code'))}</label><input id="f-code" type="text" value="${esc(s.code)}"></div>
+          <div class="form-field"><label>${esc(t('status'))}</label>
+            <select id="f-status">
+              <option value="active" ${s.status==='active'?'selected':''}>${esc(t('statusActive'))}</option>
+              <option value="draft" ${s.status==='draft'?'selected':''}>${esc(t('statusDraft'))}</option>
+              <option value="archived" ${s.status==='archived'?'selected':''}>${esc(t('statusArchived'))}</option>
+            </select>
+          </div>
+          <div class="form-field full"><label>${esc(t('titleField'))} (EN)</label><input id="f-title-en" type="text" value="${esc(s.title.en)}"></div>
+          <div class="form-field full"><label>${esc(t('titleFieldAr'))}</label><input id="f-title-ar" type="text" value="${esc(s.title.ar)}" dir="rtl"></div>
+          <div class="form-field"><label>${esc(t('department'))}</label><select id="f-dept" onchange="onSopDeptChange()">${deptOpts}</select></div>
+          <div class="form-field"><label>${esc(t('category'))}</label><select id="f-cat">${catOptsFor(curDept)}</select></div>
+          <div class="form-field"><label>${esc(t('version'))}</label><input id="f-version" type="text" value="${esc(s.version)}"></div>
+          <div class="form-field"><label>${esc(t('responsiblePerson'))}</label><input id="f-resp" type="text" value="${esc(s.responsiblePerson)}"></div>
+          <div class="form-field"><label>${esc(t('effectiveDate'))}</label><input id="f-eff" type="date" value="${esc(s.effectiveDate)}"></div>
+          <div class="form-field"><label>${esc(t('lastUpdated'))}</label><input id="f-upd" type="date" value="${esc(s.lastUpdated)}"></div>
+          <div class="form-field full"><label>${esc(t('purpose'))} (EN)</label><textarea id="f-purpose-en">${esc(s.purpose.en)}</textarea></div>
+          <div class="form-field full"><label>${esc(t('purposeAr'))}</label><textarea id="f-purpose-ar" dir="rtl">${esc(s.purpose.ar)}</textarea></div>
+          <div class="form-field full"><label>${esc(t('scope'))} (EN)</label><textarea id="f-scope-en">${esc(s.scope.en)}</textarea></div>
+          <div class="form-field full"><label>${esc(t('scopeAr'))}</label><textarea id="f-scope-ar" dir="rtl">${esc(s.scope.ar)}</textarea></div>
+          <div class="form-field full"><label>${esc(t('procedure'))} <span class="hint">(${esc(t('stepsHint'))})</span></label><textarea id="f-procedure" style="min-height:120px;">${esc((s.procedure||[]).join("\n"))}</textarea></div>
+          <div class="form-field full"><label>${esc(t('requiredDocs'))} <span class="hint">(${esc(t('stepsHint'))})</span></label><textarea id="f-docs">${esc((s.requiredDocs||[]).join("\n"))}</textarea></div>
+          <div class="form-field full">
+            <label>${esc(t('relatedForms'))}</label>
+            <div class="hint" style="margin-bottom:6px;">${esc(t('attachHint'))}</div>
+            <div class="list-editor" id="forms-editor">${(s.relatedForms||[]).map((f,i)=>attachmentRow(f,i)).join("")}</div>
+            <button class="add-row-btn" onclick="addFormRow()">+ ${esc(t('addRow'))}</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" onclick="closeModal()">${esc(t('cancel'))}</button>
+          <button class="btn btn-primary" onclick="saveSop('${editing?s.id:''}')">${esc(t('save'))}</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById("overlay-root").innerHTML = html;
+  modalOpenedAt = Date.now();
+}
+function onSopDeptChange(){
+  const deptId = document.getElementById("f-dept").value;
+  const dept = getDept(deptId);
+  document.getElementById("f-cat").innerHTML = dept.categories.map(c=>`<option value="${c.id}">${esc(tf(c.name))}</option>`).join("");
+}
+
+/* ---- Related Forms / PDF attachment rows ---- */
+function attachmentRow(f, i){
+  f = f || {name:"", type:"Form", dataUrl:""};
+  return `<div class="list-editor-row" data-form-row style="align-items:flex-start;flex-wrap:wrap;">
+    <input type="text" value="${esc(f.name)}" placeholder="${esc(t('name'))}" data-form-name style="flex:1 1 200px;">
+    <select data-form-type style="padding:9px 8px;border:1px solid var(--line);border-radius:var(--radius-m);">
+      <option value="Form" ${f.type==='Form'?'selected':''}>${esc(t('form'))}</option>
+      <option value="Document" ${f.type==='Document'?'selected':''}>${esc(t('document'))}</option>
+    </select>
+    <input type="file" accept="application/pdf" data-form-file style="flex:1 1 180px;font-size:12px;">
+    <input type="hidden" data-form-dataurl value="${f.dataUrl?esc(f.dataUrl):''}">
+    <span data-form-filenote style="font-size:11px;color:var(--muted-2);flex:1 1 100%;">${f.dataUrl ? esc(t('attachExisting'))+': '+esc(f.name||'file')+'.pdf' : esc(t('noFile'))}</span>
+    <button class="remove-row-btn" onclick="this.closest('[data-form-row]').remove()">✕</button>
+  </div>`;
+}
+function addFormRow(){
+  const wrap = document.getElementById("forms-editor");
+  const div = document.createElement("div");
+  div.innerHTML = attachmentRow(null, wrap.children.length);
+  wrap.appendChild(div.firstElementChild);
+}
+function readFileAsDataURL(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+async function collectAttachments(){
+  const rows = document.querySelectorAll("#forms-editor [data-form-row]");
+  const out = [];
+  for(const r of rows){
+    const name = r.querySelector("[data-form-name]").value.trim();
+    if(!name) continue;
+    const type = r.querySelector("[data-form-type]").value;
+    const fileInput = r.querySelector("[data-form-file]");
+    let dataUrl = r.querySelector("[data-form-dataurl]").value || "";
+    if(fileInput.files && fileInput.files[0]){
+      const file = fileInput.files[0];
+      if(file.size > 1.5*1024*1024){ toast(t('fileTooBig'), false); }
+      else { dataUrl = await readFileAsDataURL(file); }
+    }
+    out.push({name, type, dataUrl});
+  }
+  return out;
+}
+
+async function saveSop(existingId){
+  const titleEn = document.getElementById("f-title-en").value.trim();
+  const code = document.getElementById("f-code").value.trim();
+  if(!titleEn || !code){ toast(t('fieldRequired'), false); return; }
+  const orig = existingId ? getSop(existingId) : null;
+  const relatedForms = await collectAttachments();
+  const payload = {
+    id: existingId || code,
+    code: code,
+    dept: document.getElementById("f-dept").value,
+    category: document.getElementById("f-cat").value,
+    title:{en:titleEn, ar:document.getElementById("f-title-ar").value.trim()||titleEn},
+    purpose:{en:document.getElementById("f-purpose-en").value.trim(), ar:document.getElementById("f-purpose-ar").value.trim()},
+    scope:{en:document.getElementById("f-scope-en").value.trim(), ar:document.getElementById("f-scope-ar").value.trim()},
+    version: document.getElementById("f-version").value.trim() || "1.0",
+    effectiveDate: document.getElementById("f-eff").value,
+    lastUpdated: document.getElementById("f-upd").value,
+    responsiblePerson: document.getElementById("f-resp").value.trim(),
+    status: document.getElementById("f-status").value,
+    responsibilities: orig ? orig.responsibilities : [],
+    requiredDocs: document.getElementById("f-docs").value.split("\n").map(x=>x.trim()).filter(Boolean),
+    procedure: document.getElementById("f-procedure").value.split("\n").map(x=>x.trim()).filter(Boolean),
+    approvalWorkflow: orig ? orig.approvalWorkflow : [],
+    relatedForms: relatedForms,
+    relatedSops: orig ? orig.relatedSops : [],
+    versionHistory: orig ? orig.versionHistory.concat(orig.version!==document.getElementById("f-version").value.trim() ? [{version:document.getElementById("f-version").value.trim(), date:document.getElementById("f-upd").value, change:"Updated via Admin Panel", updatedBy: ROLE}] : []) : [{version:document.getElementById("f-version").value.trim()||"1.0", date:document.getElementById("f-eff").value, change:"Initial release", updatedBy: ROLE}],
+    keywords: orig ? orig.keywords : []
+  };
+  const trialSops = existingId ? SOPS.map(x=> x.id===existingId ? payload : x) : SOPS.concat([payload]);
+  const approxSize = JSON.stringify({departments:DEPARTMENTS, sops:trialSops}).length;
+  if(approxSize > 4.5*1024*1024){ toast(t('fileTooBig'), false); return; }
+  if(existingId){
+    const idx = SOPS.findIndex(x=>x.id===existingId);
+    SOPS[idx] = payload;
+  } else {
+    SOPS.push(payload);
+  }
+  await persistData(false);
+  closeModal();
+  toast(existingId ? t('updated') : t('added'), true);
+  renderShell();
+  if(parseRoute()[0]==='admin') renderAdmin("sops"); else route();
+}
+
+/* ---------------------------- SHELL + INIT ---------------------------- */
+function renderShell(){
+  document.documentElement.setAttribute("dir", dir());
+  document.documentElement.setAttribute("lang", LANG);
+  renderSidebar();
+  renderTopbar();
+}
+
+async function init(){
+  await loadAll();
+  renderShell();
+  route();
+}
+init();
+</script>
+</body>
+</html>
